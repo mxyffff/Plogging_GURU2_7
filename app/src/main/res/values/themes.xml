@@ -1,8 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Plogging_GURU2_7" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/lightMintGreen</item>
+        <item name="colorPrimaryContainer">@color/MintGreen</item>
+        <item name="colorPrimaryVariant">@color/DarkMintGreen</item>
     </style>
 
     <style name="Theme.Plogging_GURU2_7" parent="Base.Theme.Plogging_GURU2_7" />

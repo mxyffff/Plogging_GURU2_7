@@ -33,6 +33,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures { // 뷰 바인딩 환경 세팅
+        viewBinding = true
+    }
 }
 
 dependencies {
