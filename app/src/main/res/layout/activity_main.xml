@@ -65,12 +65,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="14dp"
         android:layout_marginEnd="40dp"
         android:background="@drawable/button_style"
         android:fontFamily="@font/futura_bold"
         android:text="SIGN IN"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/password" />
@@ -80,46 +80,53 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="70dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginBottom="28dp"
         android:text="아직 회원이 아니신가요?"
         android:textColor="@color/DarkGray"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnSignup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="6dp"
-        android:layout_marginTop="57dp"
-        android:layout_marginEnd="71dp"
+        android:layout_marginEnd="68dp"
+        android:layout_marginBottom="17dp"
         android:backgroundTint="@android:color/transparent"
         android:fontFamily="@font/futura"
         android:padding="0dp"
         android:text="Sign Up"
         android:textColor="@color/DarkMintGreen"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/password" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="320dp"
-        android:layout_height="1.5dp"
-        android:layout_marginTop="120dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnSignup" />
-
-    <TextView
+    <CheckBox
+        android:id="@+id/chkStayLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="SNS 계정으로 로그인"
-        app:layout_constraintBottom_toTopOf="@+id/divider"
+        android:layout_marginTop="4dp"
+        android:buttonTint="@color/MintGreen"
+        android:text="로그인 유지"
+        android:textColor="@color/DarkMintGreen"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.864"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSignin" />
+
+    <Button
+        android:id="@+id/btnFindPW"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="220dp"
+        android:layout_marginEnd="100dp"
+        android:fontFamily="@font/futura"
+        android:text="Forgot Password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSignin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -59,6 +59,36 @@ class DBManager(
         }
     }
 
+    // username과 password로 사용자 인증
+    fun isUserValid(username: String, password: String): Boolean {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM $TABLE_USERS WHERE $COLUMN_USERNAME = ? AND $COLUMN_PASSWORD = ?",
+            arrayOf(username, password)
+        )
+        val result = cursor.moveToFirst()
+        cursor.close()
+        db.close()
+        return result
+    }
+
+    // 이메일과 username으로 비밀번호 검색
+    fun getPasswordByEmailAndUsername(email: String, username: String): String? {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT $COLUMN_PASSWORD FROM $TABLE_USERS WHERE $COLUMN_EMAIL = ? AND $COLUMN_USERNAME = ?",
+            arrayOf(email, username)
+        )
+        val password = if (cursor.moveToFirst()) {
+            cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PASSWORD))
+        } else {
+            null
+        }
+        cursor.close()
+        db.close()
+        return password
+    }
+
     // username으로 사용자 검색
     fun getUserByUsername(username: String): Cursor? {
         val db = this.readableDatabase

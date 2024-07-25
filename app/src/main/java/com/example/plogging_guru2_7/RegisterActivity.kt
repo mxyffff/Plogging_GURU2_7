@@ -44,6 +44,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun registerUser(username: String, password: String, rePassword: String, email: String, nickname: String) {
         // 모든 입력 필드가 채워졌는지 확인
         if (username.isEmpty() || password.isEmpty() || rePassword.isEmpty() || email.isEmpty() || nickname.isEmpty()) {
+            Toast.makeText(this, "모든 란을 입력해주세요", Toast.LENGTH_SHORT).show()
             return
         }
 
