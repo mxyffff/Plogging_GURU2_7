@@ -35,6 +35,8 @@ class MainActivity : AppCompatActivity() {
             loginUser(username, password)
         }
 
+        // 추가 코드 필요 - CalendarActivity를 시작하는 인텐트를 생성하고 시작합니다.
+
         // 회원가입 버튼 클릭 이벤트
         binding.btnSignup.setOnClickListener {
             val intent = Intent(this, RegisterActivity::class.java)
