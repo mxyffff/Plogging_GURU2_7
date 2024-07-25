@@ -22,7 +22,6 @@ class DBManager(
         const val COLUMN_PASSWORD = "password"
         const val COLUMN_EMAIL = "email"
         const val COLUMN_NICKNAME = "nickname"
-        const val COLUMN_GENDER = "gender"
     }
 
     // DB 테이블 생성
@@ -31,8 +30,7 @@ class DBManager(
                 + "$COLUMN_USERNAME TEXT PRIMARY KEY, " // username을 PRIMARY KEY로 설정
                 + "$COLUMN_PASSWORD TEXT, "
                 + "$COLUMN_EMAIL TEXT, "
-                + "$COLUMN_NICKNAME TEXT, "
-                + "$COLUMN_GENDER TEXT)")
+                + "$COLUMN_NICKNAME TEXT)")
         db!!.execSQL(createTable)
         }
 
@@ -43,15 +41,15 @@ class DBManager(
     }
 
     // 새로운 사용자 추가
-    fun addUser (username: String, password: String, email: String, nickname: String, gender: String): Boolean {
+    fun addUser (username: String, password: String, email: String, nickname: String): Boolean {
         val db = this.writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_USERNAME, username)
             put(COLUMN_PASSWORD, password) // 평문 패스워드 저장
             put(COLUMN_EMAIL, email)
             put(COLUMN_NICKNAME, nickname)
-            put(COLUMN_GENDER, gender)
-        } return try {
+        }
+        return try {
             val success = db.insert(TABLE_USERS, null, values)
             db.close()
             Integer.parseInt("$success") != -1

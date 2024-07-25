@@ -61,20 +61,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:text="Nickname"
-            android:textSize="16sp"
-            android:fontFamily="@font/futura" />
-
-        <EditText
-            android:id="@+id/nickname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/DarkMintGreen"
-            android:hint="닉네임을 입력하세요" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:text="Email"
             android:textSize="16sp"
             android:fontFamily="@font/futura" />
@@ -86,6 +72,20 @@
             android:backgroundTint="@color/DarkMintGreen"
             android:fontFamily="@font/futura"
             android:hint="user@mail.com" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="Nickname"
+            android:textSize="16sp"
+            android:fontFamily="@font/futura" />
+
+        <EditText
+            android:id="@+id/nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/DarkMintGreen"
+            android:hint="닉네임을 입력하세요" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -96,6 +96,7 @@
         android:orientation="horizontal"
         android:gravity="center" >
         <Button
+            android:id="@+id/btnSignup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_style"
