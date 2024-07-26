@@ -101,7 +101,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="30dp"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/btnSignup"
@@ -111,5 +111,13 @@
             android:fontFamily="@font/futura_bold"
             android:text="Sign Up"
             android:textSize="16sp" />
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/MintGreen"
+            android:fontFamily="@font/futura"
+            android:text="Back to Login" />
     </LinearLayout>
 </LinearLayout>

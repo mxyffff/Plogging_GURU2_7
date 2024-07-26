@@ -99,4 +99,15 @@ class DBManager(
             null
         }
     }
+
+    // nickname 검색
+    fun getNicknameByNickname(nicknmae: String): Cursor? {
+        val db = this.readableDatabase
+        return try {
+            db.query(TABLE_USERS, null, "$COLUMN_NICKNAME=?", arrayOf(nicknmae), null, null, null)
+        } catch (e: SQLException) {
+            db.close()
+            null
+        }
+    }
 }

@@ -45,7 +45,7 @@ class FindPasswordActivity : AppCompatActivity() {
             if (password != null) {
                 // 비밀번호 정보 보여주기
                 binding.inputInfo.visibility = LinearLayout.GONE
-                binding.passwordInfo.visibility = LinearLayout.VISIBLE // 레이아웃 교체
+                binding.passwordInfo.visibility = LinearLayout.VISIBLE // 레이아웃 교체, 이전 레이아웃 제거
                 binding.passwordText.text = password
             } else {
                 Toast.makeText(this, "아이디 또는 이메일이 일치하지 않습니다", Toast.LENGTH_SHORT).show()
@@ -54,6 +54,11 @@ class FindPasswordActivity : AppCompatActivity() {
 
         // 'Back to Login' 버튼 클릭 이벤트 처리
         binding.backToLogin.setOnClickListener {
+            finish() // 현재 액티비티 종료, 로그인 화면으로 돌아가기
+        }
+
+        // 'btnBack' 버튼 클릭 이벤트 처리
+        binding.btnBack.setOnClickListener {
             finish() // 현재 액티비티 종료, 로그인 화면으로 돌아가기
         }
     }

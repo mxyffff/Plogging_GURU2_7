@@ -38,6 +38,11 @@ class RegisterActivity : AppCompatActivity() {
             val nickname = binding.nickname.text.toString()
             registerUser(username, password, rePassword, email, nickname) // 사용자 등록
         }
+
+        // 'btnBack' 버튼 클릭 이벤트 처리
+        binding.btnBack.setOnClickListener {
+            finish() // 현재 액티비티 종료, 로그인 화면으로 돌아가기
+        }
     }
 
     // 사용자 등록 처리
@@ -70,6 +75,12 @@ class RegisterActivity : AppCompatActivity() {
         // 아이디 중복 확인
         if (dbManager.getUserByUsername(username)?.moveToFirst() == true) {
             Toast.makeText(this, "이미 존재하는 아이디입니다", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // 닉네임 중복 확인
+        if (dbManager.getNicknameByNickname(nickname)?. moveToFirst() == true) {
+            Toast.makeText(this, "이미 존재하는 닉네임입니다", Toast.LENGTH_SHORT).show()
             return
         }
 
