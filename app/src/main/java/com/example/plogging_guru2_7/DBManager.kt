@@ -110,4 +110,66 @@ class DBManager(
             null
         }
     }
+
+    // 사용자 비밀번호 업데이트
+    fun updateUserPassword(username: String, newPassword: String): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_PASSWORD, newPassword)
+        }
+        val success = db.update(TABLE_USERS, values, "$COLUMN_USERNAME = ?", arrayOf(username)) > 0
+        db.close()
+        return success
+    }
+
+    // 사용자 이메일 업데이트
+    fun updateUserEmail(username: String, newEmail: String): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_EMAIL, newEmail)
+        }
+        val success = db.update(TABLE_USERS, values, "$COLUMN_USERNAME = ?", arrayOf(username)) > 0
+        db.close()
+        return success
+    }
+
+    // 사용자 삭제
+    fun deleteUser(username: String): Boolean {
+        val db = this.writableDatabase
+        return try {
+            val success = db.delete(TABLE_USERS, "$COLUMN_USERNAME = ?", arrayOf(username)) > 0
+            success
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        } finally {
+            db.close()
+        }
+    }
+
+    // 사용자 정보 가져오기 : User 클래스 사용
+    fun getUserInfo(username: String): User? {
+        val db = this.readableDatabase
+        return try {
+            val cursor = db.rawQuery(
+                "SELECT * FROM $TABLE_USERS WHERE $COLUMN_USERNAME = ?",
+                arrayOf(username)
+            )
+            val user = if (cursor.moveToFirst()) {
+                val password = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_PASSWORD))
+                val email = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_EMAIL))
+                val nickname = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NICKNAME))
+                User(username, password, email, nickname)
+            } else {
+                null
+            }
+            cursor.close()
+            user
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        } finally {
+            db.close()
+        }
+    }
 }

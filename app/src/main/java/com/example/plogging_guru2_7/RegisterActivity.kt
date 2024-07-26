@@ -49,7 +49,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun registerUser(username: String, password: String, rePassword: String, email: String, nickname: String) {
         // 모든 입력 필드가 채워졌는지 확인
         if (username.isEmpty() || password.isEmpty() || rePassword.isEmpty() || email.isEmpty() || nickname.isEmpty()) {
-            Toast.makeText(this, "모든 란을 입력해주세요", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "모든 칸을 입력해주세요", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -95,7 +95,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     // 비밀번호 유효성 검사 함수
-    private fun isValidPassword(password: String): Boolean {
+    public fun isValidPassword(password: String): Boolean {
         return password.length >= 8 && password.any { it.isDigit() } && password.any { it.isLetter() }
     }
 }

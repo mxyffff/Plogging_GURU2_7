@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -31,10 +32,8 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // DBManager 초기화
+        // dbManager 및 SharedPreferences 초기화
         dbManager = DBManager(this, "users", null, 1)
-
-        // SharedPreferences 초기화
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
@@ -82,13 +81,23 @@ class MainActivity : AppCompatActivity() {
 
             if (stayLoggedIn) {
                 // 로그인 유지 기능 처리: SharedPreferences를 사용하여 로그인 상태 저장
+                editor.putBoolean("stay_logged_in", true)
+                editor.putString("username", username)
+                editor.putString("password", password)
+                editor.apply()
                 Toast.makeText(this, "로그인 상태가 유지됩니다", Toast.LENGTH_SHORT).show()
+            } else {
+                editor.putString("username", username)
+                editor.putString("password", password)
+                editor.apply()
+                Log.d("MainActivity", "Saved username: $username")  // 로그 추가
             }
-            // 성공적으로 로그인하면 캘린더 액티비티로 이동할 수 있음
-//            val intent = Intent(this, CalendarActivity::class.java)
-//            startActivity(intent)
+            // 성공적으로 로그인하면 MyPageActivity로 이동 // 추후 CalendarActivity로 변경
+            val intent = Intent(this, MyPageActivity::class.java)
+            startActivity(intent)
+            finish()
         } else {
-            Toast.makeText(this, "아이디 또는 비밀번호가 잘못되었습니다", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "아이디 또는 비밀번호가 올바르지 않습니다", Toast.LENGTH_SHORT).show()
         }
     }
 }
