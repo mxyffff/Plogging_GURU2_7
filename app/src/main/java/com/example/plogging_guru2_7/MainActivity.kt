@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.plogging_guru2_7.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
@@ -92,8 +93,8 @@ class MainActivity : AppCompatActivity() {
                 editor.apply()
                 Log.d("MainActivity", "Saved username: $username")  // 로그 추가
             }
-            // 성공적으로 로그인하면 MyPageActivity로 이동 // 추후 CalendarActivity로 변경
-            val intent = Intent(this, MyPageActivity::class.java)
+            // 성공적으로 로그인하면 MyPageActivity로 이동 // 추후 변경
+            val intent = Intent(this, MakingGroupActivity::class.java)
             startActivity(intent)
             finish()
         } else {
