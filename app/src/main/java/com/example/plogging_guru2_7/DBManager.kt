@@ -16,12 +16,22 @@ class DBManager(
 
     companion object {
         private const val DATABASE_VERSION = 1
-        private const val DATABASE_NAME = "userDB.db"
+        private const val DATABASE_NAME = "userGroupDB.db"
         const val TABLE_USERS = "users"
         const val COLUMN_USERNAME = "username" // ID 역할을 하는 username
         const val COLUMN_PASSWORD = "password"
         const val COLUMN_EMAIL = "email"
         const val COLUMN_NICKNAME = "nickname"
+
+        const val TABLE_GROUPS = "groups"
+        const val COLUMN_ID = "id"
+        const val COLUMN_GROUP_NAME = "group_name"
+        const val COLUMN_GROUP_MEMBERS = "group_members"
+        const val COLUMN_MEETING_TIME = "meeting_time"
+        const val COLUMN_GROUP_PLACE = "group_place"
+        const val COLUMN_USER_ID = "user_id"
+        const val COLUMN_EMOJI = "emoji"
+        const val COLUMN_DETAIL_PLACE = "detail_place"
     }
 
     // DB 테이블 생성
@@ -32,11 +42,24 @@ class DBManager(
                 + "$COLUMN_EMAIL TEXT, "
                 + "$COLUMN_NICKNAME TEXT)")
         db!!.execSQL(createTable)
+
+        val createGroupTable = ("CREATE TABLE $TABLE_GROUPS ("
+                + "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "$COLUMN_GROUP_NAME TEXT, "
+                + "$COLUMN_GROUP_MEMBERS INTEGER, "
+                + "$COLUMN_MEETING_TIME TEXT, "
+                + "$COLUMN_GROUP_PLACE TEXT, "
+                + "$COLUMN_USER_ID TEXT, "
+                + "$COLUMN_EMOJI TEXT, "
+                + "$COLUMN_DETAIL_PLACE TEXT, "
+                + "FOREIGN KEY ($COLUMN_USER_ID) REFERENCES $TABLE_USERS($COLUMN_USERNAME))")
+        db.execSQL(createGroupTable)
         }
 
     // DB 업그레이드
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
         db!!.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_GROUPS")
         onCreate(db)
     }
 
@@ -57,6 +80,41 @@ class DBManager(
             db.close()
             false
         }
+    }
+
+    // 새로운 그룹 추가
+    fun addGroup(groupName: String, groupMembers: Int, meetingTime: String, groupPlace: String, username: String, emoji: String?, detailPlace: String?): Boolean {
+        val db = this.writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_GROUP_NAME, groupName)
+            put(COLUMN_GROUP_MEMBERS, groupMembers)
+            put(COLUMN_MEETING_TIME, meetingTime)
+            put(COLUMN_GROUP_PLACE, groupPlace)
+            put(COLUMN_USER_ID, username)
+            put(COLUMN_EMOJI, emoji)
+            put(COLUMN_DETAIL_PLACE, detailPlace)
+        }
+        return try {
+            val success = db.insert(TABLE_GROUPS, null, values)
+            db.close()
+            Integer.parseInt("$success") != -1
+        } catch (e: SQLException) {
+            db.close()
+            false
+        }
+    }
+
+    // 특정 사용자가 생성한 그룹 정보 조회 함수
+    fun getUserGroups(username: String): List<String> {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery("SELECT $COLUMN_GROUP_NAME FROM $TABLE_GROUPS WHERE $COLUMN_USER_ID = ?", arrayOf(username))
+        val groups = mutableListOf<String>()
+        while (cursor.moveToNext()) {
+            groups.add(cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_GROUP_NAME)))
+        }
+        cursor.close()
+        db.close()
+        return groups
     }
 
     // username과 password로 사용자 인증
@@ -172,4 +230,11 @@ class DBManager(
             db.close()
         }
     }
+
+    data class User(
+        val username: String,
+        val password: String,
+        val email: String,
+        val nickname: String
+    )
 }

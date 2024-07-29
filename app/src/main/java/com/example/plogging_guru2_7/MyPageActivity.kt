@@ -35,7 +35,7 @@ class MyPageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // dbManger 및 SharedPreferences 초기화
-        dbManager = DBManager(this, "users", null, 1)
+        dbManager = DBManager(this, "usersDB", null, 1)
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 

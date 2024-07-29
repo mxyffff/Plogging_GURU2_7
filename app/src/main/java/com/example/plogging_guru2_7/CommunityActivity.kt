@@ -1,17 +1,27 @@
 package com.example.plogging_guru2_7
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.plogging_guru2_7.databinding.ActivityCommunityBinding
+import com.example.plogging_guru2_7.databinding.ActivityNaverMapBinding
 
 class CommunityActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityCommunityBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_community)
+
+        // 바인딩 및 초기화
+        binding = ActivityCommunityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         //RecyclerView 초기화
         val rv : RecyclerView = findViewById(R.id.rvContent)
@@ -33,6 +43,13 @@ class CommunityActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        // addFab 버튼 클릭 리스너
+        binding.addFab.setOnClickListener {
+            val intent = Intent(this, MakingGroupActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 }

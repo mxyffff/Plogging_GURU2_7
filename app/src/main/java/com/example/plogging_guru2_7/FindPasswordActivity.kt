@@ -25,7 +25,7 @@ class FindPasswordActivity : AppCompatActivity() {
         }
 
         // DBManager 초기화
-        dbManager = DBManager(this, "users", null, 1)
+        dbManager = DBManager(this, "usersDB", null, 1)
 
         // 뷰 바인딩 선언
         val binding = ActivityFindPasswordBinding.inflate(layoutInflater)

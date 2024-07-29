@@ -20,6 +20,7 @@ class MakingGroupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMakingGroupBinding
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var dbManager: DBManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,11 @@ class MakingGroupActivity : AppCompatActivity() {
         binding = ActivityMakingGroupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // SharedPreferences 초기화
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
+
+        // DBManager 초기화
+        dbManager = DBManager(this, "userGroupDB", null, 1)
 
         // 날짜 선택 버튼 클릭 리스너
         binding.btnSelectDate.setOnClickListener {
@@ -60,6 +65,8 @@ class MakingGroupActivity : AppCompatActivity() {
 
         // 뒤로가기 버튼 클릭 리스너
         binding.btnBack.setOnClickListener {
+            val intent = Intent(this, CommunityActivity::class.java)
+            startActivity(intent)
             finish()
         }
     }
@@ -108,16 +115,20 @@ class MakingGroupActivity : AppCompatActivity() {
         val groupMembers = binding.meetingTime.text.toString().toIntOrNull() ?: 0
         val meetingTime = binding.datetimeResult.text.toString()
         val groupPlace = binding.placeResult.text.toString()
+        val emoji = binding.emoji.text.toString()
+        val detailPlace = binding.detailPlace.text.toString()
 
+
+        // 로그인된 사용자 이름 가져오기
         val username = sharedPreferences.getString("username", null)
 
         if (groupName.isNotEmpty() && groupMembers > 0 && meetingTime.isNotEmpty() && groupPlace.isNotEmpty() && username != null) {
-            val dbManager = GroupDBManager(this, "groupDB.db")
-            val success =
-                dbManager.addGroup(groupName, groupMembers, meetingTime, groupPlace, username)
+            val success = dbManager.addGroup(groupName, groupMembers, meetingTime, groupPlace, username, emoji, detailPlace)
             if (success) {
                 Toast.makeText(this, "모임이 성공적으로 생성되었습니다.", Toast.LENGTH_SHORT).show()
-                // 성공적으로 그룹이 생성되면 이전 화면으로 돌아감
+                // 성공적으로 그룹이 생성되면 CommunityActivity로 이동
+                val intent = Intent(this, CommunityActivity::class.java)
+                startActivity(intent)
                 finish()
             } else {
                 Toast.makeText(this, "모임 생성에 실패했습니다.", Toast.LENGTH_SHORT).show()

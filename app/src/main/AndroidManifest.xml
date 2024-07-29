@@ -54,8 +54,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <!-- Naver 지도 API 키 -->
+        </activity> <!-- Naver 지도 API 키 -->
         <meta-data
             android:name="com.naver.maps.map.CLIENT_ID"
             android:value="0krxoij4ub" />

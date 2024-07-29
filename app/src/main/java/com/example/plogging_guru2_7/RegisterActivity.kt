@@ -27,7 +27,7 @@ class RegisterActivity : AppCompatActivity() {
         val binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dbManager = DBManager(this, "users", null, 1) // DBManger 초기화
+        dbManager = DBManager(this, "usersDB", null, 1) // DBManger 초기화
 
         // 회원가입 버튼 클릭 이벤트 처리
         binding.btnSignup.setOnClickListener {

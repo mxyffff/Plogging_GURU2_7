@@ -1,206 +1,244 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".MakingGroupActivity">
-
-    <FrameLayout
-        android:layout_marginTop="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:id="@+id/btnBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:text="◀"
-            android:textColor="@color/DarkMintGreen"
-            android:textStyle="bold"
-            android:textSize="25sp" />
-
-        <TextView
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="플로깅 모임 만들기"
-            android:textStyle="bold"
-            android:textSize="28sp" />
-    </FrameLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp" >
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:layout_marginTop="50dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="◀"
+                android:textColor="@color/DarkMintGreen"
+                android:textStyle="bold"
+                android:textSize="25sp" />
+
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="플로깅 모임 만들기"
+                android:textStyle="bold"
+                android:textSize="28sp" />
+        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp" >
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="모임 이름"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/groupName"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:hint="모임의 이름을 정해주세요"
-                android:textSize="16sp" />
-        </LinearLayout>
+                android:layout_marginTop="50dp"
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="모임 인원"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="5dp">
-
-                <EditText
-                    android:id="@+id/meetingTime"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="30dp"
-                    android:hint="모임의 최대 인원수를 정해주세요"
-                    android:inputType="number"
-                    android:textSize="16sp" />
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="5dp"
-                    android:layout_gravity="right"
-                    android:text="명"
-                    android:textSize="18sp"
+                    android:layout_height="wrap_content"
+                    android:text="우리의 모임은?"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
-            </FrameLayout>
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="모임의 약속 시간"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/emoji"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    android:background="@android:color/transparent"
+                    android:text="👽"
+                    android:inputType="textMultiLine"
+                    android:textStyle="bold"
+                    android:textSize="40sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal">
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btnSelectDate"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:backgroundTint="@color/MintGreen"
-                    android:textStyle="bold"
-                    android:text="날짜 선택" />
+                    android:text="모임 이름"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <Button
-                    android:id="@+id/btnSelectTime"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/groupName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/MintGreen"
+                    android:layout_marginTop="5dp"
+                    android:hint="모임의 이름을 정해주세요"
                     android:textStyle="bold"
-                    android:text="시간 선택" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/datetimeResult"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:text="nnnn/nn/nn nn:nn"
-                android:textColor="@color/DarkMintGreen"
-                android:textStyle="bold"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:layout_marginTop="15dp"
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="모임 인원"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="wrap_content"
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
+
+                    <EditText
+                        android:id="@+id/meetingTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="30dp"
+                        android:hint="모임의 최대 인원수를 정해주세요"
+                        android:textStyle="bold"
+                        android:inputType="number"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:layout_gravity="right"
+                        android:text="명"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </FrameLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="장소"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_marginTop="15dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="모임의 약속 시간"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal">
+
+                    <Button
+                        android:id="@+id/btnSelectDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:backgroundTint="@color/MintGreen"
+                        android:textStyle="bold"
+                        android:text="날짜 선택" />
+
+                    <Button
+                        android:id="@+id/btnSelectTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/MintGreen"
+                        android:textStyle="bold"
+                        android:text="시간 선택" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/datetimeResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
+                    android:hint="nnnn/nn/nn nn:nn"
+                    android:textColorHint="@color/lightMintGreen"
+                    android:textColor="@color/DarkMintGreen"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="장소"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btnSelectPlace"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:backgroundTint="@color/MintGreen"
+                    android:textStyle="bold"
+                    android:text="지도에서 선택" />
+
+                <TextView
+                    android:id="@+id/placeResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
+                    android:hint="지도에서 장소를 선택해주세요"
+                    android:textColorHint="@color/lightMintGreen"
+                    android:textColor="@color/DarkMintGreen"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/detailPlace"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_gravity="center"
+                    android:hint="세부 주소를 입력해주세요"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
             <Button
-                android:id="@+id/btnSelectPlace"
-                android:layout_width="wrap_content"
+                android:id="@+id/btnEnter"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:backgroundTint="@color/MintGreen"
-                android:textStyle="bold"
-                android:text="지도에서 선택" />
-
-            <TextView
-                android:id="@+id/placeResult"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:text="선택한 주소"
-                android:textColor="@color/DarkMintGreen"
-                android:textStyle="bold"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/button_style"
+                android:fontFamily="@font/futura_bold"
+                android:text="Enter"
                 android:textSize="16sp" />
         </LinearLayout>
-
-        <Button
-            android:id="@+id/btnEnter"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/button_style"
-            android:fontFamily="@font/futura_bold"
-            android:text="Enter"
-            android:textSize="16sp" />
     </LinearLayout>
-
-    <FrameLayout
-        android:id="@+id/mapFragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:visibility="gone"/>
-
-</LinearLayout>
+</ScrollView>
