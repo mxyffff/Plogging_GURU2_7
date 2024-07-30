@@ -16,7 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MyPageActivity : AppCompatActivity() {
 
-    private lateinit var dbManager: DBManager
+    private lateinit var firebaseManager: FirebaseManager
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var currentUsername: String
@@ -34,8 +34,8 @@ class MyPageActivity : AppCompatActivity() {
         val binding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // dbManger 및 SharedPreferences 초기화
-        dbManager = DBManager(this, "usersDB", null, 1)
+        // FirebaseManager 및 SharedPreferences 초기화
+        firebaseManager = FirebaseManager()
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
@@ -43,9 +43,10 @@ class MyPageActivity : AppCompatActivity() {
         currentUsername = sharedPreferences.getString("username", "") ?: ""
 
         // 사용자 정보를 가져와서 UI에 표시
-        val user = dbManager.getUserInfo(currentUsername)
-        if (user != null) {
-            binding.userId.text = user.username
+        firebaseManager.getUserByUsername(currentUsername) { user ->
+            if (user != null) {
+                binding.userId.text = user.username
+            }
         }
 
         // 비밀번호 변경 버튼 클릭 리스너
@@ -57,6 +58,18 @@ class MyPageActivity : AppCompatActivity() {
         // 이메일 변경 버튼 클릭 리스너
         binding.changeEmail.setOnClickListener {
             val intent = Intent(this, ChangeEmailActivity::class.java)
+            startActivity(intent)
+        }
+
+        // 가입한 모임 버튼 클릭 리스너
+        binding.joinnedGroup.setOnClickListener {
+            val intent = Intent(this, JoinnedGroupActivity::class.java)
+            startActivity(intent)
+        }
+
+        // 생성한 모임 버튼 클릭 리스너
+        binding.joinnedGroup.setOnClickListener {
+            val intent = Intent(this, MadeGroupActivity::class.java)
             startActivity(intent)
         }
 

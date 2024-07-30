@@ -12,7 +12,7 @@ import com.example.plogging_guru2_7.databinding.ActivityFindPasswordBinding
 
 class FindPasswordActivity : AppCompatActivity() {
 
-    private lateinit var dbManager: DBManager
+    private lateinit var firebaseManager: FirebaseManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,8 +24,8 @@ class FindPasswordActivity : AppCompatActivity() {
             insets
         }
 
-        // DBManager 초기화
-        dbManager = DBManager(this, "usersDB", null, 1)
+        // FirebaseManager 초기화
+        firebaseManager = FirebaseManager()
 
         // 뷰 바인딩 선언
         val binding = ActivityFindPasswordBinding.inflate(layoutInflater)
@@ -40,15 +40,17 @@ class FindPasswordActivity : AppCompatActivity() {
                 Toast.makeText(this, "아이디와 이메일을 모두 입력해주세요", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+
             // password 검색
-            val password = dbManager.getPasswordByEmailAndUsername(email, username)
-            if (password != null) {
-                // 비밀번호 정보 보여주기
-                binding.inputInfo.visibility = LinearLayout.GONE
-                binding.passwordInfo.visibility = LinearLayout.VISIBLE // 레이아웃 교체, 이전 레이아웃 제거
-                binding.passwordText.text = password
-            } else {
-                Toast.makeText(this, "아이디 또는 이메일이 일치하지 않습니다", Toast.LENGTH_SHORT).show()
+            firebaseManager.getPasswordByEmailAndUsername(email, username) { password ->
+                if (password != null) {
+                    // 비밀번호 정보 보여주기
+                    binding.inputInfo.visibility = LinearLayout.GONE
+                    binding.passwordInfo.visibility = LinearLayout.VISIBLE // 레이아웃 교체, 이전 레이아웃 제거
+                    binding.passwordText.text = password
+                } else {
+                    Toast.makeText(this, "아이디 또는 이메일이 일치하지 않습니다", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 

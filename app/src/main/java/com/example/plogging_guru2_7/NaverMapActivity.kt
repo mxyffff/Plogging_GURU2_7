@@ -9,6 +9,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.plogging_guru2_7.databinding.ActivityNaverMapBinding
 import com.naver.maps.geometry.LatLng
+import com.naver.maps.map.CameraUpdate
+import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
 import com.naver.maps.map.overlay.Marker
@@ -69,18 +71,26 @@ class NaverMapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         naverMap.locationSource = fusedLocationSource
+        naverMap.locationTrackingMode = LocationTrackingMode.Follow // 현재 위치 표시
+
+        // 현재 위치로 카메라 이동
+        naverMap.addOnLocationChangeListener { location ->
+            val latLng = LatLng(location.latitude, location.longitude)
+            val cameraUpdate = CameraUpdate.scrollTo(latLng)
+            naverMap.moveCamera(cameraUpdate)
+        }
 
         // 맵 클릭 리스너 추가
         naverMap.setOnMapClickListener { _, latLng ->
             reverseGeocode(latLng)
             selectedLatLng = latLng
-            placeMarker(latLng)
+            placeMarker(latLng) // 마커 표시
         }
     }
 
     // 역지오코딩 (위치정보 받아오기 위해)
     private fun reverseGeocode(latLng: LatLng) {
-        thread { // 별도의 스레드 생성
+        thread { // 별도의 스레드 생성ㅕ
             try {
                 // 역지오코딩 엔드포인트 URL을 생성
                 val url = URL("https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=${latLng.longitude},${latLng.latitude}&orders=roadaddr&output=json")

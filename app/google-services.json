@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "7683778258",
+    "project_id": "plogging-guru2-7",
+    "storage_bucket": "plogging-guru2-7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:7683778258:android:6a416ef0dc89b59ea16f0b",
+        "android_client_info": {
+          "package_name": "com.example.plogging_guru2_7"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "7683778258-4vk9o1efbsen9r15lab8c02oc3osqbq8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.plogging_guru2_7",
+            "certificate_hash": "eb8a71284e72f4a807126401f4b570969f3b0c3f"
+          }
+        },
+        {
+          "client_id": "7683778258-u7ejr2a42cehf6jf4cljc5ujbiv5fkoe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC32eKXYhNgKIPgG89JWuLrnD2sZWLNjEM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "7683778258-u7ejr2a42cehf6jf4cljc5ujbiv5fkoe.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -12,7 +12,7 @@ import com.example.plogging_guru2_7.databinding.ActivityChangePwBinding
 
 class ChangePwActivity : AppCompatActivity() {
 
-    private lateinit var dbManager: DBManager
+    private lateinit var firebaseManager: FirebaseManager
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var currentUsername: String
@@ -31,8 +31,8 @@ class ChangePwActivity : AppCompatActivity() {
         val binding = ActivityChangePwBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // dbManger 및 SharedPreferences 초기화
-        dbManager = DBManager(this, "usersDB", null, 1)
+        // FirebaseManager 및 SharedPreferences 초기화
+        firebaseManager = FirebaseManager()
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
@@ -71,15 +71,19 @@ class ChangePwActivity : AppCompatActivity() {
             }
 
             // 현재 비밀번호가 올바른지 확인
-            if (dbManager.isUserValid(currentUsername, oldPw)) {
-                // 비밀번호 변경
-                if (dbManager.updateUserPassword(currentUsername, newPw)) {
-                    Toast.makeText(this, "비밀번호가 성공적으로 변경되었습니다", Toast.LENGTH_SHORT).show()
+            firebaseManager.isUserValid(currentUsername, oldPw) { isValid ->
+                if (isValid) {
+                    // 비밀번호 변경
+                    firebaseManager.updateUserPassword(currentUsername, newPw) { success ->
+                        if (success) {
+                            Toast.makeText(this, "비밀번호가 성공적으로 변경되었습니다", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "비밀번호 변경 실패", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 } else {
-                    Toast.makeText(this, "비밀번호 변경 실패", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "현재 비밀번호가 올바르지 않습니다", Toast.LENGTH_SHORT).show()
                 }
-            } else {
-                Toast.makeText(this, "현재 비밀번호가 올바르지 않습니다", Toast.LENGTH_SHORT).show()
             }
         }
     }

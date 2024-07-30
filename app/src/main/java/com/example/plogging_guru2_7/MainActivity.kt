@@ -15,7 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var dbManager: DBManager
+    private lateinit var firebaseManager: FirebaseManager
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
 
@@ -33,8 +33,8 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // dbManager 및 SharedPreferences 초기화
-        dbManager = DBManager(this, "usersDB", null, 1)
+        // FirebaseManager 및 SharedPreferences 초기화
+        firebaseManager = FirebaseManager()
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
@@ -72,33 +72,35 @@ class MainActivity : AppCompatActivity() {
     private fun loginUser(username: String, password: String, stayLoggedIn: Boolean) {
         // 사용자 이름과 비밀번호가 입력되었는지 확인
         if(username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "아이디와 비밀번호를 모두 입력해주세요",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "아이디와 비밀번호를 모두 입력해주세요", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // DB에서 사용자 인증
-        if (dbManager.isUserValid(username, password)) {
-            Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
+        // Firebase에서 사용자 인증
+        firebaseManager.isUserValid(username, password) { isValid ->
+            if (isValid) {
+                Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
 
-            if (stayLoggedIn) {
-                // 로그인 유지 기능 처리: SharedPreferences를 사용하여 로그인 상태 저장
-                editor.putBoolean("stay_logged_in", true)
-                editor.putString("username", username)
-                editor.putString("password", password)
-                editor.apply()
-                Toast.makeText(this, "로그인 상태가 유지됩니다", Toast.LENGTH_SHORT).show()
+                if (stayLoggedIn) {
+                    // 로그인 유지 기능 처리: SharedPreferences를 사용하여 로그인 상태 저장
+                    editor.putBoolean("stay_logged_in", true)
+                    editor.putString("username", username)
+                    editor.putString("password", password)
+                    editor.apply()
+                    Toast.makeText(this, "로그인 상태가 유지됩니다", Toast.LENGTH_SHORT).show()
+                } else {
+                    editor.putString("username", username)
+                    editor.putString("password", password)
+                    editor.apply()
+                    Log.d("MainActivity", "Saved username: $username")  // 로그 추가
+                }
+                // 성공적으로 로그인하면 MyPageActivity로 이동 // 추후 변경
+                val intent = Intent(this, MakingGroupActivity::class.java)
+                startActivity(intent)
+                finish()
             } else {
-                editor.putString("username", username)
-                editor.putString("password", password)
-                editor.apply()
-                Log.d("MainActivity", "Saved username: $username")  // 로그 추가
+                Toast.makeText(this, "아이디 또는 비밀번호가 올바르지 않습니다", Toast.LENGTH_SHORT).show()
             }
-            // 성공적으로 로그인하면 MyPageActivity로 이동 // 추후 변경
-            val intent = Intent(this, MakingGroupActivity::class.java)
-            startActivity(intent)
-            finish()
-        } else {
-            Toast.makeText(this, "아이디 또는 비밀번호가 올바르지 않습니다", Toast.LENGTH_SHORT).show()
         }
     }
 }

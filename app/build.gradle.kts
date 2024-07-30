@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -62,4 +64,9 @@ dependencies {
 
     // 네이버지도 위치 추적
     implementation("com.google.android.gms:play-services-location:21.1.0")
+
+    // Firebase
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-database-ktx")
 }

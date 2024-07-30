@@ -12,7 +12,7 @@ import com.example.plogging_guru2_7.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var dbManager: DBManager
+    private lateinit var firebaseManager: FirebaseManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +27,8 @@ class RegisterActivity : AppCompatActivity() {
         val binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        dbManager = DBManager(this, "usersDB", null, 1) // DBManger 초기화
+        // FirebaseManager 초기화
+        firebaseManager = FirebaseManager()
 
         // 회원가입 버튼 클릭 이벤트 처리
         binding.btnSignup.setOnClickListener {
@@ -73,29 +74,35 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         // 아이디 중복 확인
-        if (dbManager.getUserByUsername(username)?.moveToFirst() == true) {
-            Toast.makeText(this, "이미 존재하는 아이디입니다", Toast.LENGTH_SHORT).show()
-            return
-        }
+        firebaseManager.getUserByUsername(username) { existingUser ->
+            if (existingUser != null) {
+                Toast.makeText(this, "이미 존재하는 아이디입니다", Toast.LENGTH_SHORT).show()
+                return@getUserByUsername
+            }
 
-        // 닉네임 중복 확인
-        if (dbManager.getNicknameByNickname(nickname)?. moveToFirst() == true) {
-            Toast.makeText(this, "이미 존재하는 닉네임입니다", Toast.LENGTH_SHORT).show()
-            return
-        }
+            // 닉네임 중복 확인
+            firebaseManager.getUserByNickname(nickname) { existingUserByNickname ->
+                if (existingUserByNickname != null) {
+                    Toast.makeText(this, "이미 존재하는 닉네임입니다", Toast.LENGTH_SHORT).show()
+                    return@getUserByNickname
+                }
 
-        // 새로운 사용자 추가
-        val success = dbManager.addUser(username, password, email, nickname)
-        if (success) {
-            Toast.makeText(this, "회원가입에 성공했습니다", Toast.LENGTH_SHORT).show()
-            finish()  // 회원가입 완료 후 로그인 화면으로 돌아가기
-        } else {
-            Toast.makeText(this, "회원가입에 실패했습니다", Toast.LENGTH_SHORT).show()
+                // 새로운 사용자 추가
+                val user = FirebaseManager.User(username, password, email, nickname)
+                firebaseManager.addUser(user) { success ->
+                    if (success) {
+                        Toast.makeText(this, "회원가입에 성공했습니다", Toast.LENGTH_SHORT).show()
+                        finish()  // 회원가입 완료 후 로그인 화면으로 돌아가기
+                    } else {
+                        Toast.makeText(this, "회원가입에 실패했습니다", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
     }
 
     // 비밀번호 유효성 검사 함수
-    public fun isValidPassword(password: String): Boolean {
+    fun isValidPassword(password: String): Boolean {
         return password.length >= 8 && password.any { it.isDigit() } && password.any { it.isLetter() }
     }
 }

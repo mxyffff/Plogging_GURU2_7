@@ -20,7 +20,10 @@ class MakingGroupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMakingGroupBinding
     private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var dbManager: DBManager
+    private lateinit var firebaseManager: FirebaseManager
+
+    private var selectedDate: String = ""
+    private var selectedTime: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +42,8 @@ class MakingGroupActivity : AppCompatActivity() {
         // SharedPreferences 초기화
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
 
-        // DBManager 초기화
-        dbManager = DBManager(this, "userGroupDB", null, 1)
+        // FirebaseManager 초기화
+        firebaseManager = FirebaseManager()
 
         // 날짜 선택 버튼 클릭 리스너
         binding.btnSelectDate.setOnClickListener {
@@ -91,7 +94,8 @@ class MakingGroupActivity : AppCompatActivity() {
 
         val datePickerDialog = DatePickerDialog(this,
             { _: DatePicker, selectedYear: Int, selectedMonth: Int, selectedDay: Int ->
-                binding.datetimeResult.text = "$selectedYear/${selectedMonth + 1}/$selectedDay"
+                selectedDate = "$selectedYear/${selectedMonth + 1}/$selectedDay"
+                updateDateTimeResult()
             }, year, month, day)
         datePickerDialog.show()
     }
@@ -104,34 +108,52 @@ class MakingGroupActivity : AppCompatActivity() {
 
         val timePickerDialog = TimePickerDialog(this,
             { _: TimePicker, selectedHour: Int, selectedMinute: Int ->
-                binding.datetimeResult.text = "${binding.datetimeResult.text} $selectedHour:$selectedMinute"
+                selectedTime = "$selectedHour:$selectedMinute"
+                updateDateTimeResult()
             }, hour, minute, true)
         timePickerDialog.show()
     }
 
+    // 날짜 및 시간 결과 업데이트
+    private fun updateDateTimeResult() {
+        binding.datetimeResult.text = "$selectedDate $selectedTime"
+    }
+
+
     // 모임을 생성하고 데이터베이스에 저장
     private fun createGroup() {
         val groupName = binding.groupName.text.toString()
-        val groupMembers = binding.meetingTime.text.toString().toIntOrNull() ?: 0
+        val groupMembers = binding.groupMembers.text.toString().toIntOrNull() ?: 0
         val meetingTime = binding.datetimeResult.text.toString()
         val groupPlace = binding.placeResult.text.toString()
         val emoji = binding.emoji.text.toString()
         val detailPlace = binding.detailPlace.text.toString()
 
-
         // 로그인된 사용자 이름 가져오기
         val username = sharedPreferences.getString("username", null)
 
         if (groupName.isNotEmpty() && groupMembers > 0 && meetingTime.isNotEmpty() && groupPlace.isNotEmpty() && username != null) {
-            val success = dbManager.addGroup(groupName, groupMembers, meetingTime, groupPlace, username, emoji, detailPlace)
-            if (success) {
-                Toast.makeText(this, "모임이 성공적으로 생성되었습니다.", Toast.LENGTH_SHORT).show()
-                // 성공적으로 그룹이 생성되면 CommunityActivity로 이동
-                val intent = Intent(this, CommunityActivity::class.java)
-                startActivity(intent)
-                finish()
-            } else {
-                Toast.makeText(this, "모임 생성에 실패했습니다.", Toast.LENGTH_SHORT).show()
+
+            val group = FirebaseManager.Group(
+                groupName = groupName,
+                groupMembers = groupMembers,
+                meetingTime = meetingTime,
+                groupPlace = groupPlace,
+                userId = username,
+                emoji = emoji,
+                detailPlace = detailPlace
+            )
+
+            firebaseManager.addGroup(group) { success ->
+                if (success) {
+                    Toast.makeText(this, "모임이 성공적으로 생성되었습니다.", Toast.LENGTH_SHORT).show()
+                    // 성공적으로 그룹이 생성되면 CommunityActivity로 이동
+                    val intent = Intent(this, CommunityActivity::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    Toast.makeText(this, "모임 생성에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                }
             }
         } else {
             Toast.makeText(this, "모든 정보를 입력해 주세요.", Toast.LENGTH_SHORT).show()
