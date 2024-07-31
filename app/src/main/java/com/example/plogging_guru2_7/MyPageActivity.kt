@@ -68,7 +68,7 @@ class MyPageActivity : AppCompatActivity() {
         }
 
         // 생성한 모임 버튼 클릭 리스너
-        binding.joinnedGroup.setOnClickListener {
+        binding.madeGroup.setOnClickListener {
             val intent = Intent(this, MadeGroupActivity::class.java)
             startActivity(intent)
         }

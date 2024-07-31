@@ -1,7 +1,12 @@
 package com.example.plogging_guru2_7
 
+import android.util.Log
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.GenericTypeIndicator
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 
 class FirebaseManager {
@@ -24,7 +29,8 @@ class FirebaseManager {
         val groupPlace: String = "",
         val userId: String = "",
         val emoji: String? = null,
-        val detailPlace: String? = null
+        val detailPlace: String? = null,
+        val participants: List<String>? = null  // 참여 사용자들의 username 리스트
     )
 
     // 사용자 추가
@@ -36,11 +42,16 @@ class FirebaseManager {
 
     // 그룹 추가
     fun addGroup(group: Group, callback: (Boolean) -> Unit) {
-        val key = groupsRef.push().key ?: return callback(false)
-        group.id = key
-        groupsRef.child(key).setValue(group).addOnCompleteListener { task ->
-            callback(task.isSuccessful)
-        }
+        val newGroupRef = groupsRef.push()
+        val groupId = newGroupRef.key ?: ""
+        val groupWithId = group.copy(id = groupId)  // 그룹 ID 추가
+        newGroupRef.setValue(groupWithId)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
     }
 
     // 사용자 인증
@@ -105,15 +116,146 @@ class FirebaseManager {
         }
     }
 
-    // 특정 사용자가 생성한 그룹 정보 조회 함수
-    fun getUserGroups(username: String, callback: (List<Group>) -> Unit) {
-        val query = groupsRef.orderByChild("userId").equalTo(username)
-        query.get().addOnSuccessListener { dataSnapshot ->
-            val groups = dataSnapshot.children.mapNotNull { it.getValue<Group>() }
-            callback(groups)
-        }.addOnFailureListener {
-            callback(emptyList())
-        }
+    // 모든 그룹 정보 조회 함수
+    fun getAllGroups(callback: (List<Group>) -> Unit) {
+        groupsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val groups = mutableListOf<Group>()
+                for (childSnapshot in snapshot.children) {
+                    val group = childSnapshot.getValue(Group::class.java)
+                    if (group != null) {
+                        groups.add(group)
+                    }
+                }
+                callback(groups)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseManager", "Failed to read groups", error.toException())
+                callback(emptyList())
+            }
+        })
     }
 
+    // 사용자가 가입한 그룹 정보 조회 함수
+    fun getJoinedGroups(username: String, callback: (List<Group>) -> Unit) {
+        groupsRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val groups = mutableListOf<Group>()
+                for (childSnapshot in snapshot.children) {
+                    val group = childSnapshot.getValue(Group::class.java)
+                    if (group != null && group.participants?.contains(username) == true) {
+                        groups.add(group)
+                    }
+                }
+                callback(groups)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseManager", "Failed to read groups", error.toException())
+                callback(emptyList())
+            }
+        })
+    }
+
+    // 사용자가 생성한 그룹 정보 조회 함수
+    fun getCreatedGroups(username: String, callback: (List<Group>) -> Unit) {
+        groupsRef.orderByChild("userId").equalTo(username)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val groups = mutableListOf<Group>()
+                    snapshot.children.forEach { childSnapshot ->
+                        val group = childSnapshot.getValue(Group::class.java)
+                        if (group != null) {
+                            groups.add(group)
+                        }
+                    }
+                    callback(groups)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    callback(emptyList())
+                }
+            })
+    }
+
+    // 그룹에 사용자 추가
+    fun addParticipantToGroup(groupId: String, username: String, callback: (Boolean) -> Unit) {
+        val groupRef = groupsRef.child(groupId)
+        groupRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val group = snapshot.getValue(Group::class.java)
+                val participants = group?.participants?.toMutableList() ?: mutableListOf()
+                // 그룹의 인원수가 꽉 차 있는지 검사
+                if (group != null && participants.size < group.groupMembers && !participants.contains(username)) {
+                    participants.add(username)
+                    groupRef.child("participants").setValue(participants)
+                        .addOnSuccessListener {
+                            callback(true)
+                        }
+                        .addOnFailureListener {
+                            callback(false)
+                        }
+                } else {
+                    callback(false)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(false)
+            }
+        })
+    }
+
+    // 그룹에서 사용자 제거
+    fun removeParticipantFromGroup(groupId: String, username: String, callback: (Boolean) -> Unit) {
+        val groupRef = groupsRef.child(groupId)
+        groupRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val group = snapshot.getValue(Group::class.java)
+                val participants = group?.participants?.toMutableList() ?: mutableListOf()
+                if (group != null && participants.contains(username)) {
+                    participants.remove(username)
+                    groupRef.child("participants").setValue(participants)
+                        .addOnSuccessListener {
+                            callback(true)
+                        }
+                        .addOnFailureListener {
+                            callback(false)
+                        }
+                } else {
+                    callback(false)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(false)
+            }
+        })
+    }
+
+    // 그룹 삭제
+    fun deleteGroup(groupId: String, currentUsername: String, callback: (Boolean) -> Unit) {
+        val groupRef = groupsRef.child(groupId)
+        groupRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val group = snapshot.getValue(Group::class.java)
+                if (group != null && group.userId == currentUsername) {
+                    groupRef.removeValue()
+                        .addOnSuccessListener {
+                            callback(true)
+                        }
+                        .addOnFailureListener {
+                            callback(false)
+                        }
+                } else {
+                    callback(false)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(false)
+            }
+        })
+    }
 }

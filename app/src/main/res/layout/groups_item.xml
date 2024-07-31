@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/border"
+    android:layout_margin="10dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/groupName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Group Name"
+            android:textSize="20sp"
+            android:textColor="@color/DarkMintGreen"
+            android:textStyle="bold"
+            android:paddingBottom="5dp" />
+
+        <TextView
+            android:id="@+id/groupMembers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Members Count"
+            android:textSize="16sp"
+            android:paddingBottom="5dp" />
+
+        <TextView
+            android:id="@+id/groupPlace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Group Place"
+            android:textSize="16sp"
+            android:paddingBottom="2dp" />
+        <TextView
+            android:id="@+id/detailPlace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Detail Place"
+            android:textSize="16sp"
+            android:paddingBottom="5dp" />
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/groupEmoji"
+        android:layout_gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="64dp"
+        android:text="👽" />
+
+</LinearLayout>

@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("MainActivity", "Saved username: $username")  // 로그 추가
                 }
                 // 성공적으로 로그인하면 MyPageActivity로 이동 // 추후 변경
-                val intent = Intent(this, MakingGroupActivity::class.java)
+                val intent = Intent(this, MyPageActivity::class.java)
                 startActivity(intent)
                 finish()
             } else {

@@ -2,10 +2,12 @@ package com.example.plogging_guru2_7
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.plogging_guru2_7.databinding.ActivityCommunityBinding
 import com.example.plogging_guru2_7.databinding.ActivityNaverMapBinding
@@ -13,6 +15,8 @@ import com.example.plogging_guru2_7.databinding.ActivityNaverMapBinding
 class CommunityActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCommunityBinding
+    private lateinit var groupAdapter: GroupAdapter
+    private var groupList: ArrayList<FirebaseManager.Group> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +42,19 @@ class CommunityActivity : AppCompatActivity() {
         //RecyclerView 어댑터 설정
         val rvAdapter = RVAdapter(baseContext, items)
         rv.adapter = rvAdapter
+
+        // RecyclerView 설정
+        binding.rvGroup.layoutManager = LinearLayoutManager(this)
+        groupAdapter = GroupAdapter(this, groupList)
+        binding.rvGroup.adapter = groupAdapter
+
+        // Firebase에서 모든 그룹 데이터 가져오기
+        FirebaseManager().getAllGroups { groups ->
+            groupList.clear()
+            groupList.addAll(groups)
+            Log.d("CommunityActivity", "Group list size: ${groupList.size}") // 데이터 확인
+            groupAdapter.notifyDataSetChanged()
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
