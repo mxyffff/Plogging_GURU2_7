@@ -33,6 +33,12 @@ class JoinnedGroupActivity : AppCompatActivity() {
         val binding = ActivityJoinnedGroupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // SharedPreferences 초기화
+        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
+
+        // 현재 로그인한 사용자의 사용자명 가져오기
+        val currentUsername = sharedPreferences.getString("username", null)
+
         // 'back' 버튼 클릭시
         binding.back.setOnClickListener {
             finish() // 현재 액티비티 종료, 마이페이지 화면으로 돌아가기
@@ -40,14 +46,8 @@ class JoinnedGroupActivity : AppCompatActivity() {
 
         // RecyclerView 설정
         binding.rvGroup.layoutManager = LinearLayoutManager(this)
-        groupAdapter = GroupAdapter(this, groupList)
+        groupAdapter = GroupAdapter(this, groupList, currentUsername ?: "")
         binding.rvGroup.adapter = groupAdapter
-
-        // SharedPreferences 초기화
-        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
-
-        // 현재 로그인한 사용자의 사용자명 가져오기
-        val currentUsername = sharedPreferences.getString("username", null)
 
         if (currentUsername != null) {
             // Firebase에서 사용자가 가입한 그룹 데이터 가져오기

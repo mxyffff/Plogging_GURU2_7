@@ -23,7 +23,7 @@
                 android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:text="플로깅 모임 구하기"
-                android:textColor="#000000"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -42,6 +42,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:text="플로깅 커뮤니티"
+            android:textColor="@color/DarkMintGreen"
             android:textSize="20sp"
             android:textStyle="bold" />
 

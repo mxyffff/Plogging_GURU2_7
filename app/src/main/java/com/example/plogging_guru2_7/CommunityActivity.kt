@@ -1,6 +1,8 @@
 package com.example.plogging_guru2_7
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
@@ -17,6 +19,7 @@ class CommunityActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCommunityBinding
     private lateinit var groupAdapter: GroupAdapter
     private var groupList: ArrayList<FirebaseManager.Group> = ArrayList()
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +29,12 @@ class CommunityActivity : AppCompatActivity() {
         // 바인딩 및 초기화
         binding = ActivityCommunityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // SharedPreferences 초기화
+        sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
+
+        // 현재 로그인한 사용자의 사용자명 가져오기
+        val currentUsername = sharedPreferences.getString("username", null)
 
         //RecyclerView 초기화
         val rv : RecyclerView = findViewById(R.id.rvContent)
@@ -45,14 +54,14 @@ class CommunityActivity : AppCompatActivity() {
 
         // RecyclerView 설정
         binding.rvGroup.layoutManager = LinearLayoutManager(this)
-        groupAdapter = GroupAdapter(this, groupList)
+        groupAdapter = GroupAdapter(this, groupList, currentUsername ?: "")
         binding.rvGroup.adapter = groupAdapter
 
         // Firebase에서 모든 그룹 데이터 가져오기
         FirebaseManager().getAllGroups { groups ->
             groupList.clear()
             groupList.addAll(groups)
-            Log.d("CommunityActivity", "Group list size: ${groupList.size}") // 데이터 확인
+            Log.d("CommunityActivity", "Group list size: ${groupList.size}") // 데이터 잘 가져오는지 확인
             groupAdapter.notifyDataSetChanged()
         }
 
@@ -67,6 +76,23 @@ class CommunityActivity : AppCompatActivity() {
             val intent = Intent(this, MakingGroupActivity::class.java)
             startActivity(intent)
             finish()
+        }
+
+        // 데이터 초기 로드
+        loadGroupData()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 액티비티가 다시 활성화될 때 데이터 갱신
+        loadGroupData()
+    }
+
+    private fun loadGroupData() {
+        FirebaseManager().getAllGroups { groups ->
+            groupList.clear()
+            groupList.addAll(groups)
+            groupAdapter.notifyDataSetChanged()
         }
     }
 }

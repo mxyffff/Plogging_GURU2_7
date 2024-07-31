@@ -2,6 +2,7 @@ package com.example.plogging_guru2_7
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 //RecyclerView의 Group 어댑터 클래스
-class GroupAdapter(val context: Context, val groups: ArrayList<FirebaseManager.Group>) : RecyclerView.Adapter<GroupAdapter.ViewHolder>() {
-
+class GroupAdapter(
+    val context: Context,
+    val groups: ArrayList<FirebaseManager.Group>,
+    val currentUserId: String
+) : RecyclerView.Adapter<GroupAdapter.ViewHolder>() {
     // ViewHolder 클래스
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(group: FirebaseManager.Group) {
@@ -28,8 +32,11 @@ class GroupAdapter(val context: Context, val groups: ArrayList<FirebaseManager.G
 
             //아이템 클릭 리스너
             itemView.setOnClickListener {
-                // 클릭 시 상세 페이지로 이동 (아직 제작 중이라 임시)
-                val intent = Intent(context, OtherGroupPageActivity::class.java)
+                val intent = if (group.userId == currentUserId) {
+                    Intent(context, MyGroupPageActivity::class.java)
+                } else {
+                    Intent(context, OtherGroupPageActivity::class.java)
+                }
                 intent.putExtra("groupId", group.id)
                 context.startActivity(intent)
             }

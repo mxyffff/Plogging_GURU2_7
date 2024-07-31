@@ -44,12 +44,15 @@ class FirebaseManager {
     fun addGroup(group: Group, callback: (Boolean) -> Unit) {
         val newGroupRef = groupsRef.push()
         val groupId = newGroupRef.key ?: ""
-        val groupWithId = group.copy(id = groupId)  // 그룹 ID 추가
+        val participants = mutableListOf(group.userId) // 그룹 생성자를 participants 리스트에 추가
+        val groupWithId = group.copy(id = groupId, participants = participants)
         newGroupRef.setValue(groupWithId)
             .addOnSuccessListener {
+                Log.d("FirebaseManager", "Group added with participants: $groupWithId")
                 callback(true)
             }
             .addOnFailureListener {
+                Log.e("FirebaseManager", "Failed to add group", it)
                 callback(false)
             }
     }
@@ -114,6 +117,21 @@ class FirebaseManager {
         usersRef.child(username).removeValue().addOnCompleteListener { task ->
             callback(task.isSuccessful)
         }
+    }
+
+    // groupId로 그룹 정보 가져오는 함수
+    fun getGroupById(groupId: String, callback: (Group?) -> Unit) {
+        groupsRef.child(groupId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val group = snapshot.getValue(Group::class.java)
+                callback(group)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseManager", "Failed to read group", error.toException())
+                callback(null)
+            }
+        })
     }
 
     // 모든 그룹 정보 조회 함수
