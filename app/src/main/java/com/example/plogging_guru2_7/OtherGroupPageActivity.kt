@@ -4,10 +4,12 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.plogging_guru2_7.databinding.ActivityMyPageBinding
 import com.example.plogging_guru2_7.databinding.ActivityOtherGroupPageBinding
 
@@ -17,9 +19,11 @@ class OtherGroupPageActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
     private lateinit var currentUsername: String
+    private lateinit var currentNickname: String
     private lateinit var binding: ActivityOtherGroupPageBinding
     private lateinit var groupId: String
     private var isParticipant: Boolean = false
+    private lateinit var commentAdapter: CommentAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +46,9 @@ class OtherGroupPageActivity : AppCompatActivity() {
 
         // 현재 로그인된 사용자 이름 가져오기
         currentUsername = sharedPreferences.getString("username", "") ?: ""
+        firebaseManager.getUserByUsername(currentUsername) { user ->
+            currentNickname = user?.nickname ?: currentUsername
+        }
 
         // 그룹 ID 가져오기
         groupId = intent.getStringExtra("groupId") ?: ""
@@ -60,6 +67,35 @@ class OtherGroupPageActivity : AppCompatActivity() {
                 leaveGroup()
             } else {
                 joinGroup()
+            }
+        }
+
+        // 댓글 RecyclerView 설정
+        commentAdapter = CommentAdapter(currentUsername) { commentId, userId ->
+            deleteComment(commentId, userId)
+        }
+        binding.rvComments.layoutManager = LinearLayoutManager(this)
+        binding.rvComments.adapter = commentAdapter
+        loadComments()
+
+        // '댓글 전송' 버튼 클릭시
+        binding.btnSend.setOnClickListener {
+            val commentText = binding.edtComment.text.toString()
+            if (commentText.isNotEmpty()) {
+                val comment = FirebaseManager.Comment(
+                    userId = currentUsername,
+                    nickname = currentNickname,
+                    text = commentText
+                )
+                firebaseManager.addComment(groupId, comment) { success ->
+                    if (success) {
+                        Toast.makeText(this, "댓글이 추가되었습니다", Toast.LENGTH_SHORT).show()
+                        binding.edtComment.text.clear()
+                        loadComments()
+                    } else {
+                        Toast.makeText(this, "댓글 추가에 실패했습니다", Toast.LENGTH_SHORT).show()
+                    }
+                }
             }
         }
     }
@@ -108,6 +144,27 @@ class OtherGroupPageActivity : AppCompatActivity() {
             } else {
                 Log.e("OtherGroupPageActivity", "Failed to leave group")
             }
+        }
+    }
+
+    private fun loadComments() {
+        firebaseManager.getCommentsByGroupId(groupId) { comments ->
+            commentAdapter.submitList(comments)
+        }
+    }
+
+    private fun deleteComment(commentId: String, userId: String) {
+        if (userId == currentUsername) {
+            firebaseManager.deleteComment(groupId, commentId) { success ->
+                if (success) {
+                    Toast.makeText(this, "댓글이 삭제되었습니다", Toast.LENGTH_SHORT).show()
+                    loadComments()
+                } else {
+                    Toast.makeText(this, "댓글 삭제에 실패했습니다", Toast.LENGTH_SHORT).show()
+                }
+            }
+        } else {
+            Toast.makeText(this, "댓글을 삭제할 권한이 없습니다", Toast.LENGTH_SHORT).show()
         }
     }
 }

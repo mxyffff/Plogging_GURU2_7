@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".OtherGroupPageActivity">
 
     <LinearLayout
@@ -14,6 +15,7 @@
 
         <FrameLayout
             android:layout_marginTop="50dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -37,124 +39,175 @@
                 android:textSize="28sp" />
         </FrameLayout>
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/emoji"
-                android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@android:color/transparent"
-                android:text="👽"
-                android:textStyle="bold"
-                android:textSize="50sp" />
+                android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/participantsState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_gravity="center"
-                android:text="n / N 참여중"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:textColor="@color/DarkMintGreen" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="@color/lightGray" />
+                    <TextView
+                        android:id="@+id/emoji"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@android:color/transparent"
+                        android:text="👽"
+                        android:textStyle="bold"
+                        android:textSize="50sp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/participantsState"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:layout_gravity="center"
+                        android:text="n / N 참여중"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="@color/DarkMintGreen" />
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="모임의 약속 시간"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:background="@color/lightGray" />
 
-            <TextView
-                android:id="@+id/meetingTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_gravity="center"
-                android:text="nnnn/nn/nn nn:nn"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:textColor="@color/DarkMintGreen" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:background="@color/lightGray" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="모임의 약속 시간"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/meetingTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_gravity="center"
+                        android:text="nnnn/nn/nn nn:nn"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:textColor="@color/DarkMintGreen" />
+                </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="모임의 장소"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:background="@color/lightGray" />
 
-            <TextView
-                android:id="@+id/meetingPlace"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_gravity="center"
-                android:text="ㅇㅇ시 ㅇㅇ구 ㅇㅇ로"
-                android:textStyle="bold"
-                android:textSize="20sp"
-                android:textColor="@color/DarkMintGreen" />
-            <TextView
-                android:id="@+id/detailPlace"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"
-                android:text="ㅇㅇ광장 입구"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:textColor="@color/DarkMintGreen" />
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="모임의 장소"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/meetingPlace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_gravity="center"
+                        android:text="ㅇㅇ시 ㅇㅇ구 ㅇㅇ로"
+                        android:textStyle="bold"
+                        android:textSize="20sp"
+                        android:textColor="@color/DarkMintGreen" />
+                    <TextView
+                        android:id="@+id/detailPlace"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center"
+                        android:text="ㅇㅇ광장 입구"
+                        android:textStyle="bold"
+                        android:textSize="18sp"
+                        android:textColor="@color/DarkMintGreen" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnEnter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="30dp"
+                    android:layout_marginBottom="30dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/button_style"
+                    android:text="가입하기"
+                    android:textStyle="bold"
+                    android:textSize="16sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvComments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginBottom="200dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+        </ScrollView>
+
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btnEnter"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:layout_alignParentBottom="true"
-        android:layout_margin="30dp"
-        android:layout_gravity="bottom"
-        android:background="@drawable/button_style"
-        android:text="가입하기"
-        android:textStyle="bold"
-        android:textSize="16sp" />
+        android:orientation="vertical" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            android:layout_marginHorizontal="10dp"
+            android:background="@color/UltraLightMintGreen">
+            <EditText
+                android:id="@+id/edtComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="30dp"
+                android:backgroundTint="@android:color/transparent"
+                android:textColorHint="@color/MintGreen"
+                android:textColor="@color/DarkMintGreen"
+                android:textSize="18sp"
+                android:hint="댓글을 입력하세요."/>
+
+            <TextView
+                android:id="@+id/btnSend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_gravity="right"
+                android:textSize="26sp"
+                android:textColor="@color/MintGreen"
+                android:text="➤"/>
+        </FrameLayout>
+    </LinearLayout>
 </RelativeLayout>

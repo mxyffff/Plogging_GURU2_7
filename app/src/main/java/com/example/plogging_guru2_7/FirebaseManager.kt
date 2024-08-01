@@ -13,7 +13,9 @@ class FirebaseManager {
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val usersRef: DatabaseReference = database.getReference("users")
     private val groupsRef: DatabaseReference = database.getReference("groups")
+    private val commentsRef: DatabaseReference = database.getReference("comments")
 
+    // 회원 정보
     data class User(
         val username: String = "",
         val password: String = "",
@@ -21,6 +23,7 @@ class FirebaseManager {
         val nickname: String = ""
     )
 
+    // 모임 정보
     data class Group(
         var id: String = "",
         val groupName: String = "",
@@ -31,6 +34,15 @@ class FirebaseManager {
         val emoji: String? = null,
         val detailPlace: String? = null,
         val participants: List<String>? = null  // 참여 사용자들의 username 리스트
+    )
+
+    // 댓글 정보
+    data class Comment(
+        val id: String = "",
+        val userId: String = "",
+        val nickname: String = "",
+        val text: String = "",
+        val timestamp: Long = System.currentTimeMillis()
     )
 
     // 사용자 추가
@@ -53,6 +65,19 @@ class FirebaseManager {
             }
             .addOnFailureListener {
                 Log.e("FirebaseManager", "Failed to add group", it)
+                callback(false)
+            }
+    }
+
+    // 댓글 추가
+    fun addComment(groupId: String, comment: Comment, callback: (Boolean) -> Unit) {
+        val newCommentRef = commentsRef.child(groupId).push()
+        val commentWithId = comment.copy(id = newCommentRef.key ?: "")
+        newCommentRef.setValue(commentWithId)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
                 callback(false)
             }
     }
@@ -275,5 +300,33 @@ class FirebaseManager {
                 callback(false)
             }
         })
+    }
+
+    // 그룹의 모든 댓글 가져오기
+    fun getCommentsByGroupId(groupId: String, callback: (List<Comment>) -> Unit) {
+        commentsRef.child(groupId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val comments = mutableListOf<Comment>()
+                for (childSnapshot in snapshot.children) {
+                    val comment = childSnapshot.getValue(Comment::class.java)
+                    if (comment != null) {
+                        comments.add(comment)
+                    }
+                }
+                callback(comments)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                callback(emptyList())
+            }
+        })
+    }
+
+    // 댓글 삭제
+    fun deleteComment(groupId: String, commentId: String, callback: (Boolean) -> Unit) {
+        commentsRef.child(groupId).child(commentId).removeValue()
+            .addOnCompleteListener { task ->
+                callback(task.isSuccessful)
+            }
     }
 }
