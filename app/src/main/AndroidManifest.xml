@@ -20,6 +20,17 @@
             android:name=".PloggingSpotActivity"
             android:exported="false" />
         <activity
+            android:name=".AddPersonalActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".AddGroupActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name=".CalendarActivity"
+            android:exported="false" />
+        <activity
             android:name=".OtherGroupPageActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

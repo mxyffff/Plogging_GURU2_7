@@ -9,12 +9,16 @@ import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
 
+
 class FirebaseManager {
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
     private val usersRef: DatabaseReference = database.getReference("users")
     private val groupsRef: DatabaseReference = database.getReference("groups")
     private val commentsRef: DatabaseReference = database.getReference("comments")
     private val markersRef: DatabaseReference = database.getReference("markers")
+    private val grecordRef: DatabaseReference = database.getReference("grecord")
+    private val precordRef: DatabaseReference = database.getReference("precord")
+
 
     // 회원 정보
     data class User(
@@ -54,6 +58,27 @@ class FirebaseManager {
         val latitude: Double = 0.0,
         val longitude: Double = 0.0,
         val address: String = ""
+    )
+
+    // 모임 기록 정보
+    data class grecord(
+        val id: String = "",
+        val groupName: String = "",
+        val date: Int = 0,
+        val meetingTime: Int = 0,
+        val groupPlace: String = "",
+        val supplies: String = "",
+        val feedback: String = "",
+    )
+
+    // 개인 기록 정보
+    data class precord(
+        val id: String = "",
+        val personalName: String = "",
+        val date: Int = 0,
+        val personalPlace: String = "",
+        val photo: String = "",
+        val memo: String = "",
     )
 
     // 사용자 추가
@@ -105,6 +130,39 @@ class FirebaseManager {
                 callback(false)
             }
     }
+
+    // 모임 기록 추가
+    fun addGrecord(grecord: grecord, callback: (Boolean) -> Unit) {
+        val newGrecordRef = grecordRef.push()
+        val grecordId = newGrecordRef.key ?: ""
+        val grecordWithId = grecord.copy(id = grecordId)
+        newGrecordRef.setValue(grecordWithId)
+            .addOnSuccessListener {
+                Log.d("FirebaseManager", "Grecord added: $grecordWithId")
+                callback(true)
+            }
+            .addOnFailureListener {
+                Log.e("FirebaseManager", "Failed to add grecord", it)
+                callback(false)
+            }
+    }
+
+    // 개인 기록 추가
+    fun addPrecord(precord: precord, callback: (Boolean) -> Unit) {
+        val newPrecordRef = precordRef.push()
+        val precordId = newPrecordRef.key ?: ""
+        val precordWithId = precord.copy(id = precordId)
+        newPrecordRef.setValue(precordWithId)
+            .addOnSuccessListener {
+                Log.d("FirebaseManager", "Precord added: $precordWithId")
+                callback(true)
+            }
+            .addOnFailureListener {
+                Log.e("FirebaseManager", "Failed to add precord", it)
+                callback(false)
+            }
+    }
+
 
     // 사용자 인증
     fun isUserValid(username: String, password: String, callback: (Boolean) -> Unit) {
@@ -374,4 +432,30 @@ class FirebaseManager {
             }
         })
     }
+
+    // 모든 기록 정보 조회
+    fun getAllActivities(callback: (List<Any>) -> Unit) {
+        val activitiesRef = database.getReference("activities")
+        activitiesRef.get().addOnSuccessListener { dataSnapshot ->
+            val activities = mutableListOf<Any>()
+            dataSnapshot.children.forEach { childSnapshot ->
+                val grecord = childSnapshot.getValue(grecord::class.java)
+                val precord = childSnapshot.getValue(precord::class.java)
+                grecord?.let { activities.add(it) }
+                precord?.let { activities.add(it) }
+            }
+            callback(activities)
+        }.addOnFailureListener {
+            callback(emptyList())
+        }
+    }
+
+    // 기록 정보 삭제
+    fun deleteActivity(id: String, callback: (Boolean) -> Unit) {
+        val activityRef = database.getReference("activities").child(id)
+        activityRef.removeValue().addOnCompleteListener { task ->
+            callback(task.isSuccessful)
+        }
+    }
+
 }
