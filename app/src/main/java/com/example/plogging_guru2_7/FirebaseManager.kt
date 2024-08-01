@@ -14,6 +14,7 @@ class FirebaseManager {
     private val usersRef: DatabaseReference = database.getReference("users")
     private val groupsRef: DatabaseReference = database.getReference("groups")
     private val commentsRef: DatabaseReference = database.getReference("comments")
+    private val markersRef: DatabaseReference = database.getReference("markers")
 
     // 회원 정보
     data class User(
@@ -45,6 +46,16 @@ class FirebaseManager {
         val timestamp: Long = System.currentTimeMillis()
     )
 
+    // 마커 정보
+    data class Marker(
+        val id: String = "",
+        val userId: String = "",
+        val nickname: String = "",
+        val latitude: Double = 0.0,
+        val longitude: Double = 0.0,
+        val address: String = ""
+    )
+
     // 사용자 추가
     fun addUser(user: User, callback: (Boolean) -> Unit) {
         usersRef.child(user.username).setValue(user).addOnCompleteListener { task ->
@@ -74,6 +85,19 @@ class FirebaseManager {
         val newCommentRef = commentsRef.child(groupId).push()
         val commentWithId = comment.copy(id = newCommentRef.key ?: "")
         newCommentRef.setValue(commentWithId)
+            .addOnSuccessListener {
+                callback(true)
+            }
+            .addOnFailureListener {
+                callback(false)
+            }
+    }
+
+    // 마커 추가
+    fun addMarker(marker: Marker, callback: (Boolean) -> Unit) {
+        val newMarkerRef = markersRef.push()
+        val markerWithId = marker.copy(id = newMarkerRef.key ?: "")
+        newMarkerRef.setValue(markerWithId)
             .addOnSuccessListener {
                 callback(true)
             }
@@ -328,5 +352,26 @@ class FirebaseManager {
             .addOnCompleteListener { task ->
                 callback(task.isSuccessful)
             }
+    }
+
+    // 모든 마커 정보 조회
+    fun getAllMarkers(callback: (List<Marker>) -> Unit) {
+        markersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val markers = mutableListOf<Marker>()
+                for (childSnapshot in snapshot.children) {
+                    val marker = childSnapshot.getValue(Marker::class.java)
+                    if (marker != null) {
+                        markers.add(marker)
+                    }
+                }
+                callback(markers)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseManager", "Failed to read markers", error.toException())
+                callback(emptyList())
+            }
+        })
     }
 }

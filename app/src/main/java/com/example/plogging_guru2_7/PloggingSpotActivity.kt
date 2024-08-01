@@ -1,18 +1,20 @@
 package com.example.plogging_guru2_7
 
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.plogging_guru2_7.NaverMapActivity.Companion
 import com.example.plogging_guru2_7.databinding.ActivityNaverMapBinding
+import com.example.plogging_guru2_7.databinding.ActivityPloggingSpotBinding
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraUpdate
 import com.naver.maps.map.LocationTrackingMode
 import com.naver.maps.map.NaverMap
 import com.naver.maps.map.OnMapReadyCallback
+import com.naver.maps.map.overlay.LocationOverlay
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
 import org.json.JSONObject
@@ -20,24 +22,27 @@ import java.net.URL
 import javax.net.ssl.HttpsURLConnection
 import kotlin.concurrent.thread
 
-class NaverMapActivity : AppCompatActivity(), OnMapReadyCallback {
+class PloggingSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
-    private lateinit var binding: ActivityNaverMapBinding
+    private lateinit var binding: ActivityPloggingSpotBinding
     private lateinit var naverMap: NaverMap
     private lateinit var fusedLocationSource: FusedLocationSource
     private var selectedAddress: String? = null
     private var selectedLatLng: LatLng? = null
     private var marker: Marker? = null
+    private lateinit var firebaseManager: FirebaseManager
+    private lateinit var currentUsername: String
+    private lateinit var currentNickname: String
     private var isInitialLocationSet = false // 플래그 추가
 
     companion object {
-        private const val LOCATION_PERMISSION_REQUEST_CODE = 1000
+        private const val LOCATION_PERMISSION_REQUEST_CODE = 2000
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_naver_map)
+        setContentView(R.layout.activity_plogging_spot)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -45,34 +50,61 @@ class NaverMapActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         // 바인딩 및 초기화
-        binding = ActivityNaverMapBinding.inflate(layoutInflater)
+        binding = ActivityPloggingSpotBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         binding.map.onCreate(savedInstanceState)
         binding.map.getMapAsync(this)
 
-        fusedLocationSource = FusedLocationSource(this, LOCATION_PERMISSION_REQUEST_CODE)
+        fusedLocationSource = FusedLocationSource(this,
+            PloggingSpotActivity.LOCATION_PERMISSION_REQUEST_CODE
+        )
 
-        // 위치 선택 버튼 클릭 리스터
-        binding.btnSelectLocation.setOnClickListener {
-            if (selectedAddress != null && selectedLatLng != null) {
-                val intent = Intent().apply {
-                    putExtra("address", selectedAddress)
-                    putExtra("latitude", selectedLatLng!!.latitude)
-                    putExtra("longitude", selectedLatLng!!.longitude)
+        // FirebaseManager 초기화
+        firebaseManager = FirebaseManager()
+
+        // 현재 로그인 중인 사용자 정보 가져오기
+        val sharedPreferences = getSharedPreferences("login_prefs", MODE_PRIVATE)
+        currentUsername = sharedPreferences.getString("username", "") ?: ""
+        firebaseManager.getUserByUsername(currentUsername) { user ->
+            currentNickname = user?.nickname ?: currentUsername
+        }
+
+        // btnSelectSpot 버튼 클릭 리스터
+        binding.btnSelectSpot.setOnClickListener {
+            if (selectedLatLng != null && selectedAddress != null) {
+                val newMarker = FirebaseManager.Marker(
+                    userId = currentUsername,
+                    nickname = currentNickname,
+                    latitude = selectedLatLng!!.latitude,
+                    longitude = selectedLatLng!!.longitude,
+                    address = selectedAddress!!
+                )
+                firebaseManager.addMarker(newMarker) { success ->
+                    if (success) {
+                        Toast.makeText(this, "마커가 저장되었습니다", Toast.LENGTH_SHORT).show()
+                        loadMarkers()
+                    } else {
+                        Toast.makeText(this, "마커 저장에 실패했습니다", Toast.LENGTH_SHORT).show()
+                    }
                 }
-                setResult(RESULT_OK, intent)
-                finish()
             } else {
-                Toast.makeText(this, "위치를 선택해 주세요.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "마커를 선택해 주세요", Toast.LENGTH_SHORT).show()
             }
         }
+
     }
 
     override fun onMapReady(naverMap: NaverMap) {
         this.naverMap = naverMap
         naverMap.locationSource = fusedLocationSource
         naverMap.locationTrackingMode = LocationTrackingMode.Follow // 현재 위치 표시
+
+        // 맵 클릭 리스너 추가
+        naverMap.setOnMapClickListener { _, latLng ->
+            reverseGeocode(latLng)
+            selectedLatLng = latLng
+            placeMarker(latLng) // 마커 표시
+        }
 
         // 현재 위치로 카메라 이동 (한 번만)
         naverMap.addOnLocationChangeListener { location ->
@@ -84,12 +116,8 @@ class NaverMapActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        // 맵 클릭 리스너 추가
-        naverMap.setOnMapClickListener { _, latLng ->
-            reverseGeocode(latLng)
-            selectedLatLng = latLng
-            placeMarker(latLng) // 마커 표시
-        }
+        // 저장된 마커 로드
+        loadMarkers()
     }
 
     // 역지오코딩 (위치정보 받아오기 위해)
@@ -130,22 +158,22 @@ class NaverMapActivity : AppCompatActivity(), OnMapReadyCallback {
                         // UI 처리
                         runOnUiThread {
                             selectedAddress = address
-                            Toast.makeText(this@NaverMapActivity, "선택한 주소: $address", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@PloggingSpotActivity, "선택한 주소: $address", Toast.LENGTH_SHORT).show()
                         }
                     } else {
                         runOnUiThread {
-                            Toast.makeText(this@NaverMapActivity, "주소를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@PloggingSpotActivity, "주소를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
                         }
                     }
                 } else {
                     runOnUiThread {
-                        Toast.makeText(this@NaverMapActivity, "주소를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@PloggingSpotActivity, "주소를 가져올 수 없습니다.", Toast.LENGTH_SHORT).show()
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
                 runOnUiThread {
-                    Toast.makeText(this@NaverMapActivity, "주소를 가져오는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@PloggingSpotActivity, "주소를 가져오는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -156,6 +184,23 @@ class NaverMapActivity : AppCompatActivity(), OnMapReadyCallback {
         marker = Marker().apply {
             position = latLng
             map = naverMap
+        }
+    }
+
+    private fun loadMarkers() {
+        firebaseManager.getAllMarkers { markers ->
+            for (markerData in markers) {
+                val marker = Marker().apply {
+                    position = LatLng(markerData.latitude, markerData.longitude)
+                    map = naverMap
+                    captionText = markerData.nickname
+                    iconTintColor = if (markerData.userId == currentUsername) android.graphics.Color.GREEN else android.graphics.Color.BLUE
+                }
+                marker.setOnClickListener {
+                    Toast.makeText(this, "${markerData.nickname}님의 마커: ${markerData.address}", Toast.LENGTH_SHORT).show()
+                    true
+                }
+            }
         }
     }
 
