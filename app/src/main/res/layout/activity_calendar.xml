@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.plogging_guru2_7.CalendarActivity">
+    tools:context=".CalendarActivity">
 
     <RelativeLayout
         android:id="@+id/calendar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <TextView
             android:id="@+id/tvTitle"
@@ -47,7 +46,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_margin="16dp"
-            android:src="@drawable/plus" />
+            android:layout_margin="18dp"
+            android:clickable="true"
+            app:shapeAppearanceOverlay="@style/FabShape"
+            app:backgroundTint="@color/MintGreen"
+            app:fabSize="normal"
+            app:srcCompat="@drawable/plus"
+            app:tint="@color/white" />
     </RelativeLayout>
-</layout>
+
+</RelativeLayout>

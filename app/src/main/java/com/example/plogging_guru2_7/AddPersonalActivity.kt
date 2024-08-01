@@ -1,6 +1,5 @@
 package com.example.plogging_guru2_7
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -8,10 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.plogging_guru2_7.R
 import com.example.plogging_guru2_7.databinding.ActivityAddPersonalBinding
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 
 class AddPersonalActivity : AppCompatActivity() {
 
@@ -20,8 +16,8 @@ class AddPersonalActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_personal)
         enableEdgeToEdge()
+        setContentView(R.layout.activity_add_personal)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -67,7 +63,7 @@ class AddPersonalActivity : AppCompatActivity() {
         val memo = binding.etMemo.text.toString()
 
 
-        if (personalName.isNotEmpty() && date > 0 && personalPlace.isNotEmpty() && photo.isNotEmpty() && memo.isNotEmpty() ) {
+        if (personalName.isNotEmpty() && date > 0 && personalPlace.isNotEmpty() && photo.isNotEmpty() && memo.isNotEmpty()) {
 
             val precord = FirebaseManager.precord(
                 personalName = personalName,
@@ -92,6 +88,4 @@ class AddPersonalActivity : AppCompatActivity() {
             Toast.makeText(this, "모든 정보를 입력해 주세요.", Toast.LENGTH_SHORT).show()
         }
     }
-
-
 }

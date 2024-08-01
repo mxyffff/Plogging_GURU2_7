@@ -1,5 +1,7 @@
 package com.example.plogging_guru2_7
 
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -68,8 +70,35 @@ class FirebaseManager {
         val meetingTime: Int = 0,
         val groupPlace: String = "",
         val supplies: String = "",
-        val feedback: String = "",
-    )
+        val feedback: String = ""
+    ) : Parcelable {
+        constructor(parcel: Parcel) : this(
+            parcel.readString() ?: "",
+            parcel.readString() ?: "",
+            parcel.readInt(),
+            parcel.readInt(),
+            parcel.readString() ?: "",
+            parcel.readString() ?: "",
+            parcel.readString() ?: ""
+        )
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeString(id)
+            parcel.writeString(groupName)
+            parcel.writeInt(date)
+            parcel.writeInt(meetingTime)
+            parcel.writeString(groupPlace)
+            parcel.writeString(supplies)
+            parcel.writeString(feedback)
+        }
+
+        override fun describeContents(): Int = 0
+
+        companion object CREATOR : Parcelable.Creator<grecord> {
+            override fun createFromParcel(parcel: Parcel): grecord = grecord(parcel)
+            override fun newArray(size: Int): Array<grecord?> = arrayOfNulls(size)
+        }
+    }
 
     // 개인 기록 정보
     data class precord(
@@ -78,8 +107,33 @@ class FirebaseManager {
         val date: Int = 0,
         val personalPlace: String = "",
         val photo: String = "",
-        val memo: String = "",
-    )
+        val memo: String = ""
+    ) : Parcelable {
+        constructor(parcel: Parcel) : this(
+            parcel.readString() ?: "",
+            parcel.readString() ?: "",
+            parcel.readInt(),
+            parcel.readString() ?: "",
+            parcel.readString() ?: "",
+            parcel.readString() ?: ""
+        )
+
+        override fun writeToParcel(parcel: Parcel, flags: Int) {
+            parcel.writeString(id)
+            parcel.writeString(personalName)
+            parcel.writeInt(date)
+            parcel.writeString(personalPlace)
+            parcel.writeString(photo)
+            parcel.writeString(memo)
+        }
+
+        override fun describeContents(): Int = 0
+
+        companion object CREATOR : Parcelable.Creator<precord> {
+            override fun createFromParcel(parcel: Parcel): precord = precord(parcel)
+            override fun newArray(size: Int): Array<precord?> = arrayOfNulls(size)
+        }
+    }
 
     // 사용자 추가
     fun addUser(user: User, callback: (Boolean) -> Unit) {

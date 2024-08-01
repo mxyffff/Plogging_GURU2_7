@@ -1,6 +1,5 @@
 package com.example.plogging_guru2_7
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -8,20 +7,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.plogging_guru2_7.R
 import com.example.plogging_guru2_7.databinding.ActivityAddGroupBinding
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 
 class AddGroupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddGroupBinding
     private lateinit var firebaseManager: FirebaseManager
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_group)
         enableEdgeToEdge()
+        setContentView(R.layout.activity_add_group)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -96,6 +93,5 @@ class AddGroupActivity : AppCompatActivity() {
             Toast.makeText(this, "모든 정보를 입력해 주세요.", Toast.LENGTH_SHORT).show()
         }
     }
-
 
 }

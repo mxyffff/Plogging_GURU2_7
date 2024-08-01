@@ -2,10 +2,7 @@ package com.example.plogging_guru2_7
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
-import android.view.View
 import android.widget.CalendarView
-import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -21,10 +18,11 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
     private lateinit var firebaseManager: FirebaseManager
     private lateinit var activityAdapter: ActivityAdapter
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_calendar)
         enableEdgeToEdge()
+        setContentView(R.layout.activity_calendar)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -54,6 +52,7 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
 
         // Load activities from Firebase and update RecyclerView
         loadActivitiesFromFirebase()
+
     }
 
     private fun setupCalendar() {
@@ -126,6 +125,7 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
                 Toast.makeText(this, "기록 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         }
+
     }
 
     override fun putExtra(s: String, activity: FirebaseManager.grecord) {
