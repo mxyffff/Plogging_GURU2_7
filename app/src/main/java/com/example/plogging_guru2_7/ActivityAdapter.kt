@@ -46,6 +46,7 @@ class ActivityAdapter(
     }
 
     override fun onBindViewHolder(holder: ActivityViewHolder, position: Int) {
+        //
         val activity = activities[position]
         when (activity) {
             is FirebaseManager.grecord -> {

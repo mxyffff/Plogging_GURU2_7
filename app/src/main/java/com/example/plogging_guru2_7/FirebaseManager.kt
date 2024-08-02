@@ -229,7 +229,11 @@ class FirebaseManager {
     }
 
     // 사용자 비밀번호 찾기
-    fun getPasswordByEmailAndUsername(email: String, username: String, callback: (String?) -> Unit) {
+    fun getPasswordByEmailAndUsername(
+        email: String,
+        username: String,
+        callback: (String?) -> Unit
+    ) {
         usersRef.child(username).get().addOnSuccessListener { dataSnapshot ->
             val user = dataSnapshot.getValue<User>()
             callback(if (user?.email == email) user.password else null)
@@ -261,9 +265,10 @@ class FirebaseManager {
 
     // 사용자 비밀번호 업데이트
     fun updateUserPassword(username: String, newPassword: String, callback: (Boolean) -> Unit) {
-        usersRef.child(username).child("password").setValue(newPassword).addOnCompleteListener { task ->
-            callback(task.isSuccessful)
-        }
+        usersRef.child(username).child("password").setValue(newPassword)
+            .addOnCompleteListener { task ->
+                callback(task.isSuccessful)
+            }
     }
 
     // 사용자 이메일 업데이트
@@ -366,7 +371,10 @@ class FirebaseManager {
                 val group = snapshot.getValue(Group::class.java)
                 val participants = group?.participants?.toMutableList() ?: mutableListOf()
                 // 그룹의 인원수가 꽉 차 있는지 검사
-                if (group != null && participants.size < group.groupMembers && !participants.contains(username)) {
+                if (group != null && participants.size < group.groupMembers && !participants.contains(
+                        username
+                    )
+                ) {
                     participants.add(username)
                     groupRef.child("participants").setValue(participants)
                         .addOnSuccessListener {
@@ -508,28 +516,37 @@ class FirebaseManager {
     // 특정 날짜의 기록 정보 조회
     fun getActivitiesByDate(date: String, callback: (List<Any>) -> Unit) {
         val activities = mutableListOf<Any>()
-        precordRef.orderByChild("date").equalTo(date.toInt()).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                for (childSnapshot in snapshot.children) {
-                    val activity = childSnapshot.getValue(precord::class.java)
-                    activity?.let { activities.add(it) }
-                }
-                grecordRef.orderByChild("date").equalTo(date.toInt())
-                    .addListenerForSingleValueEvent(object : ValueEventListener {
-                        override fun onDataChange(snapshot: DataSnapshot) {
-                            for (childSnapshot in snapshot.children) {
-                                val activity = childSnapshot.getValue(grecord::class.java)
-                                activity?.let { activities.add(it) }
-                            }
-                            callback(activities)
-                        }
+        val dateInt = date.toIntOrNull() ?: return callback(emptyList()) // date를 Int로 변환
 
-                        override fun onCancelled(error: DatabaseError) {
-                            callback(emptyList())
-                        }
-                    })
-            }
-        }
+        precordRef.orderByChild("date").equalTo(dateInt.toDouble())
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    for (childSnapshot in snapshot.children) {
+                        val activity = childSnapshot.getValue(precord::class.java)
+                        activity?.let { activities.add(it) }
+                    }
+                    grecordRef.orderByChild("date").equalTo(dateInt.toDouble())
+                        .addListenerForSingleValueEvent(object : ValueEventListener {
+                            override fun onDataChange(snapshot: DataSnapshot) {
+                                for (childSnapshot in snapshot.children) {
+                                    val activity = childSnapshot.getValue(grecord::class.java)
+                                    activity?.let { activities.add(it) }
+                                }
+                                callback(activities)
+                            }
+
+                            override fun onCancelled(error: DatabaseError) {
+                                Log.e("FirebaseManager", "Failed to read activities", error.toException())
+                                callback(emptyList())
+                            }
+                        })
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    callback(emptyList())
+                }
+            })
+    }
 
     // 기록 정보 삭제
     fun deleteActivity(id: String, callback: (Boolean) -> Unit) {
