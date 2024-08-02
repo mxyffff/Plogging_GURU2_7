@@ -134,6 +134,7 @@ class AddPersonalActivity : AppCompatActivity() {
             firebaseManager.uploadPhoto(selectedPhotoUri!!) { photoUrl ->
                 if (photoUrl != null) {
                     saveRecord(photoUrl)
+                    Toast.makeText(this, "사진과 함께 업로드 성공!.", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "사진 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
