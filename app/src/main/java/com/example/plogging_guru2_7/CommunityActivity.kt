@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -29,6 +30,12 @@ class CommunityActivity : AppCompatActivity() {
         // 바인딩 및 초기화
         binding = ActivityCommunityBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //버튼 초기화
+        val myPageIcon: Button = findViewById(R.id.myPageIcon)
+        val calendarIcon: Button = findViewById(R.id.calendarIcon)
+        val communityIcon: Button = findViewById(R.id.communityIcon)
+        val mapIcon: Button = findViewById(R.id.mapIcon)
 
         // SharedPreferences 초기화
         sharedPreferences = getSharedPreferences("login_prefs", Context.MODE_PRIVATE)
@@ -80,6 +87,26 @@ class CommunityActivity : AppCompatActivity() {
 
         // 데이터 초기 로드
         loadGroupData()
+
+        //각 버튼에 클릭 리스너 설정 (각 페이지로 이동)
+        mapIcon.setOnClickListener {
+            val intent = Intent(this, PloggingSpotActivity::class.java)
+            startActivity(intent)
+        }
+
+        calendarIcon.setOnClickListener {
+            val intent = Intent(this, CalendarActivity::class.java)
+            startActivity(intent)
+        }
+
+        communityIcon.setOnClickListener {
+            //현재 페이지 유지
+        }
+
+        myPageIcon.setOnClickListener {
+            val intent = Intent(this, MyPageActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onResume() {

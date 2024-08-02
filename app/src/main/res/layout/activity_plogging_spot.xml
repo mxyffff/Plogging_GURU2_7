@@ -34,10 +34,50 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="75dp"
         android:backgroundTint="@color/MintGreen"
         android:text="SPOT 찍기"
         android:textSize="16sp"
         android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom"
+        android:background="@color/lightMintGreen">
+
+        <Button
+            android:id="@+id/mapIcon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/baseline_map_24"
+            android:text="지도" />
+
+        <Button
+            android:id="@+id/calendarIcon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/baseline_calendar_month_24"
+            android:text="달력" />
+
+        <Button
+            android:id="@+id/communityIcon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/baseline_developer_board_24"
+            android:text="커뮤니티" />
+
+        <Button
+            android:id="@+id/myPageIcon"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableTop="@drawable/baseline_person_24"
+            android:text="내정보" />
+    </LinearLayout>
 
 </FrameLayout>

@@ -2,6 +2,7 @@ package com.example.plogging_guru2_7
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.CalendarView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -37,6 +38,12 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
         binding = ActivityCalendarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //버튼 초기화
+        val myPageIcon: Button = findViewById(R.id.myPageIcon)
+        val calendarIcon: Button = findViewById(R.id.calendarIcon)
+        val communityIcon: Button = findViewById(R.id.communityIcon)
+        val mapIcon: Button = findViewById(R.id.mapIcon)
+
         // FirebaseManager 초기화
         firebaseManager = FirebaseManager()
 
@@ -53,6 +60,26 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         activityAdapter = ActivityAdapter(emptyList(), this)
         binding.recyclerView.adapter = activityAdapter
+
+        //각 버튼에 클릭 리스너 설정 (각 페이지로 이동)
+        mapIcon.setOnClickListener {
+            val intent = Intent(this, PloggingSpotActivity::class.java)
+            startActivity(intent)
+        }
+
+        calendarIcon.setOnClickListener {
+            //현재 페이지 유지
+        }
+
+        communityIcon.setOnClickListener {
+            val intent = Intent(this, CommunityActivity::class.java)
+            startActivity(intent)
+        }
+
+        myPageIcon.setOnClickListener {
+            val intent = Intent(this, MyPageActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setupCalendar() {

@@ -1,6 +1,8 @@
 package com.example.plogging_guru2_7
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -55,6 +57,12 @@ class PloggingSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         binding.map.onCreate(savedInstanceState)
         binding.map.getMapAsync(this)
 
+        //버튼 초기화
+        val myPageIcon: Button = findViewById(R.id.myPageIcon)
+        val calendarIcon: Button = findViewById(R.id.calendarIcon)
+        val communityIcon: Button = findViewById(R.id.communityIcon)
+        val mapIcon: Button = findViewById(R.id.mapIcon)
+
         fusedLocationSource = FusedLocationSource(this,
             PloggingSpotActivity.LOCATION_PERMISSION_REQUEST_CODE
         )
@@ -90,6 +98,26 @@ class PloggingSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             } else {
                 Toast.makeText(this, "마커를 선택해 주세요", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        //각 버튼에 클릭 리스너 설정 (각 페이지로 이동)
+        mapIcon.setOnClickListener {
+            //현재 페이지 유지
+        }
+
+        calendarIcon.setOnClickListener {
+            val intent = Intent(this, CalendarActivity::class.java)
+            startActivity(intent)
+        }
+
+        communityIcon.setOnClickListener {
+            val intent = Intent(this, CommunityActivity::class.java)
+            startActivity(intent)
+        }
+
+        myPageIcon.setOnClickListener {
+            val intent = Intent(this, MyPageActivity::class.java)
+            startActivity(intent)
         }
 
     }

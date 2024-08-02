@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,12 @@ class MyPageActivity : AppCompatActivity() {
         // 뷰 바인딩 선언
         val binding = ActivityMyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        //버튼 초기화
+        val myPageIcon: Button = findViewById(R.id.myPageIcon)
+        val calendarIcon: Button = findViewById(R.id.calendarIcon)
+        val communityIcon: Button = findViewById(R.id.communityIcon)
+        val mapIcon: Button = findViewById(R.id.mapIcon)
 
         // FirebaseManager 및 SharedPreferences 초기화
         firebaseManager = FirebaseManager()
@@ -86,6 +93,26 @@ class MyPageActivity : AppCompatActivity() {
             Toast.makeText(this, "로그아웃 되었습니다.", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, MainActivity::class.java)) // 로그아웃 성공시 로그인 화면으로 이동
             finish()
+        }
+
+        //각 버튼에 클릭 리스너 설정 (각 페이지로 이동)
+        mapIcon.setOnClickListener {
+            val intent = Intent(this, PloggingSpotActivity::class.java)
+            startActivity(intent)
+        }
+
+        calendarIcon.setOnClickListener {
+            val intent = Intent(this, CalendarActivity::class.java)
+            startActivity(intent)
+        }
+
+        communityIcon.setOnClickListener {
+            val intent = Intent(this, CommunityActivity::class.java)
+            startActivity(intent)
+        }
+
+        myPageIcon.setOnClickListener {
+            //현재 페이지 유지
         }
     }
 }
