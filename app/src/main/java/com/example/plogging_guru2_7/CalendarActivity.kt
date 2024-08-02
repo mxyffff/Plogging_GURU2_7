@@ -17,6 +17,7 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
     private lateinit var binding: ActivityCalendarBinding
     private lateinit var firebaseManager: FirebaseManager
     private lateinit var activityAdapter: ActivityAdapter
+    private var selectedDate: String = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +52,7 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
         binding.recyclerView.adapter = activityAdapter
 
         // Load activities from Firebase and update RecyclerView
-        loadActivitiesFromFirebase()
+//        loadActivitiesFromFirebase()
 
     }
 
@@ -61,6 +62,12 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
             // 날짜가 선택되었을 때 처리할 코드를 여기에 작성
             val selectedDate = "$year-${month + 1}-$dayOfMonth"
             // 선택된 날짜에 따라 데이터를 필터링하거나 로드
+        }
+    }
+
+    private fun loadActivitiesForDate(date: String) {
+        firebaseManager.getActivitiesByDate(date) { activities ->
+            activityAdapter.updateData(activities)
         }
     }
 
@@ -87,16 +94,16 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
             popupWindow.dismiss()
         }
 
-        // 팝업 창 표시 위치
-        popupWindow.showAsDropDown(binding.fab, -60, -200)
+        // 팝업 창 표시 위치를 fab 바로 위로 설정
+        popupWindow.showAsDropDown(binding.fab, 0, -binding.fab.height - view.measuredHeight)
     }
 
-    private fun loadActivitiesFromFirebase() {
-        firebaseManager.getAllActivities { activities ->
-            activityAdapter = ActivityAdapter(activities, this)
-            binding.recyclerView.adapter = activityAdapter
-        }
-    }
+//    private fun loadActivitiesFromFirebase() {
+//        firebaseManager.getAllActivities { activities ->
+//            activityAdapter = ActivityAdapter(activities, this)
+//            binding.recyclerView.adapter = activityAdapter
+//        }
+//    }
 
     override fun onItemClick(activity: Any) {
         val intent = when (activity) {

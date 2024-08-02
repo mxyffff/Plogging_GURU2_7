@@ -504,6 +504,33 @@ class FirebaseManager {
         }
     }
 
+
+    // 특정 날짜의 기록 정보 조회
+    fun getActivitiesByDate(date: String, callback: (List<Any>) -> Unit) {
+        val activities = mutableListOf<Any>()
+        precordRef.orderByChild("date").equalTo(date.toInt()).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                for (childSnapshot in snapshot.children) {
+                    val activity = childSnapshot.getValue(precord::class.java)
+                    activity?.let { activities.add(it) }
+                }
+                grecordRef.orderByChild("date").equalTo(date.toInt())
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(snapshot: DataSnapshot) {
+                            for (childSnapshot in snapshot.children) {
+                                val activity = childSnapshot.getValue(grecord::class.java)
+                                activity?.let { activities.add(it) }
+                            }
+                            callback(activities)
+                        }
+
+                        override fun onCancelled(error: DatabaseError) {
+                            callback(emptyList())
+                        }
+                    })
+            }
+        }
+
     // 기록 정보 삭제
     fun deleteActivity(id: String, callback: (Boolean) -> Unit) {
         val activityRef = database.getReference("activities").child(id)

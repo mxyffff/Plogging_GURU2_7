@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.plogging_guru2_7.databinding.CalendarItemBinding
 
 class ActivityAdapter(
-    private val activities: List<Any>,
+    private var activities: List<Any>,
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<ActivityAdapter.ActivityViewHolder>() {
 
@@ -60,4 +60,9 @@ class ActivityAdapter(
     }
 
     override fun getItemCount(): Int = activities.size
+
+    fun updateData(newActivities: List<Any>) {
+        activities = newActivities
+        notifyDataSetChanged()
+    }
 }
