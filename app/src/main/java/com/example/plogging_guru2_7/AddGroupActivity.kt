@@ -1,19 +1,21 @@
 package com.example.plogging_guru2_7
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 import com.example.plogging_guru2_7.databinding.ActivityAddGroupBinding
 
 class AddGroupActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddGroupBinding
     private lateinit var firebaseManager: FirebaseManager
-
+    private var grecord: FirebaseManager.grecord? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,32 +34,26 @@ class AddGroupActivity : AppCompatActivity() {
         // FirebaseManager 초기화
         firebaseManager = FirebaseManager()
 
+        grecord = intent.getParcelableExtra("activity")
 
-        // 'back' 버튼 클릭시
-        binding.btnBack.setOnClickListener {
-            val intent = Intent(this, CalendarActivity::class.java)
-            startActivity(intent)
-            finish()
+        grecord?.let {
+            binding.etGroupName.setText(it.groupName)
+            binding.etDate.setText(it.date.toString())
+            binding.etTime.setText(it.meetingTime.toString())
+            binding.etLocation.setText(it.groupPlace)
+            binding.etSupplies.setText(it.supplies)
+            binding.etFeedback.setText(it.feedback)
         }
 
-        // Handle saving data to Firebase
         binding.btnSave.setOnClickListener {
             saveGroupToDatabase()
-            // Save data to Firebase
         }
 
-        // EditText에 기존 데이터 표시
-        intent.getParcelableExtra<FirebaseManager.grecord>("activity")?.let { grecord ->
-            binding.etGroupName.setText(grecord.groupName)
-            binding.etDate.setText(grecord.date.toString())
-            binding.etTime.setText(grecord.meetingTime.toString())
-            binding.etLocation.setText(grecord.groupPlace)
-            binding.etSupplies.setText(grecord.supplies)
-            binding.etFeedback.setText(grecord.feedback)
+        binding.btnBack.setOnClickListener {
+            finish()
         }
     }
 
-    // add group record
     private fun saveGroupToDatabase() {
         val groupName = binding.etGroupName.text.toString()
         val date = binding.etDate.text.toString().toIntOrNull() ?: 0
@@ -66,32 +62,40 @@ class AddGroupActivity : AppCompatActivity() {
         val supplies = binding.etSupplies.text.toString()
         val feedback = binding.etFeedback.text.toString()
 
+        val updatedGrecord = grecord?.copy(
+            groupName = groupName,
+            date = date,
+            meetingTime = meetingTime,
+            groupPlace = groupPlace,
+            supplies = supplies,
+            feedback = feedback
+        ) ?: FirebaseManager.grecord(
+            groupName = groupName,
+            date = date,
+            meetingTime = meetingTime,
+            groupPlace = groupPlace,
+            supplies = supplies,
+            feedback = feedback
+        )
 
-        if (groupName.isNotEmpty() && date > 0 && meetingTime > 0 && groupPlace.isNotEmpty() && supplies.isNotEmpty() && feedback.isNotEmpty() ) {
-
-            val grecord = FirebaseManager.grecord(
-                groupName = groupName,
-                date = date,
-                meetingTime = meetingTime,
-                groupPlace = groupPlace,
-                supplies = supplies,
-                feedback = feedback
-            )
-
-            firebaseManager.addGrecord(grecord) { success ->
+        if (grecord != null) {
+            firebaseManager.updateGrecord(updatedGrecord) { success ->
                 if (success) {
-                    Toast.makeText(this, "기록이 성공적으로 저장되었습니다.", Toast.LENGTH_SHORT).show()
-                    // move to CalendarActivity
-                    val intent = Intent(this, CalendarActivity::class.java)
-                    startActivity(intent)
+                    Toast.makeText(this, "기록이 업데이트되었습니다.", Toast.LENGTH_SHORT).show()
                     finish()
                 } else {
-                    Toast.makeText(this, "기록 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "기록 업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         } else {
-            Toast.makeText(this, "모든 정보를 입력해 주세요.", Toast.LENGTH_SHORT).show()
+            firebaseManager.addGrecord(updatedGrecord) { success ->
+                if (success) {
+                    Toast.makeText(this, "기록이 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                    finish()
+                } else {
+                    Toast.makeText(this, "기록 추가에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
-
 }

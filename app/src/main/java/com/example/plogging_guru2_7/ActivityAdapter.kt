@@ -21,7 +21,7 @@ class ActivityAdapter(
         abstract fun putExtra(s: String, activity: FirebaseManager.precord)
     }
 
-    inner class ActivityViewHolder(val binding: CalendarItemBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener  {
+    inner class ActivityViewHolder(val binding: CalendarItemBinding) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
         init {
             binding.ivdelete.setOnClickListener {
                 val position = adapterPosition
@@ -46,7 +46,6 @@ class ActivityAdapter(
     }
 
     override fun onBindViewHolder(holder: ActivityViewHolder, position: Int) {
-        //
         val activity = activities[position]
         when (activity) {
             is FirebaseManager.grecord -> {

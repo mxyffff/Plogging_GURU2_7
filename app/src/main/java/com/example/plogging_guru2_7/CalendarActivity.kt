@@ -19,6 +19,9 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
     private lateinit var activityAdapter: ActivityAdapter
     private var selectedDate: String = ""
 
+    companion object {
+        private const val REQUEST_CODE_EDIT_ACTIVITY = 2
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,12 +49,10 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
             showFloatingMenu()
         }
 
-        // RecyclerView setup for listing activities
+        /// RecyclerView setup for listing activities
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         activityAdapter = ActivityAdapter(emptyList(), this)
         binding.recyclerView.adapter = activityAdapter
-
-
     }
 
     private fun setupCalendar() {
@@ -92,7 +93,21 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
         }
 
         // 팝업 창 표시 위치를 fab 바로 위로 설정
-        popupWindow.showAsDropDown(binding.fab, 0, -binding.fab.height - view.measuredHeight)
+        binding.fab.post {
+            val location = IntArray(2)
+            binding.fab.getLocationOnScreen(location)
+            val x = location[0] + (binding.fab.width / 2) - (view.measuredWidth / 2)
+            val y = location[1] - view.measuredHeight - binding.fab.height / 2
+
+            popupWindow.showAtLocation(binding.fab, android.view.Gravity.NO_GRAVITY, x, y)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_EDIT_ACTIVITY && resultCode == RESULT_OK) {
+            loadActivitiesForDate(selectedDate)
+        }
     }
 
     override fun onItemClick(activity: Any) {
@@ -105,7 +120,7 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
             }
             else -> return
         }
-        startActivity(intent)
+        startActivityForResult(intent, REQUEST_CODE_EDIT_ACTIVITY)
     }
 
     override fun onDeleteClick(activity: Any) {
@@ -122,7 +137,6 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
                 Toast.makeText(this, "기록 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         }
-
     }
 
     override fun putExtra(s: String, activity: FirebaseManager.grecord) {

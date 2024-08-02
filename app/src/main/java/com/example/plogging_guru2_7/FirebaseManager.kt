@@ -1,5 +1,6 @@
 package com.example.plogging_guru2_7
 
+import android.net.Uri
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.Log
@@ -10,7 +11,8 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.getValue
-
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 
 class FirebaseManager {
     private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
@@ -20,7 +22,8 @@ class FirebaseManager {
     private val markersRef: DatabaseReference = database.getReference("markers")
     private val grecordRef: DatabaseReference = database.getReference("grecord")
     private val precordRef: DatabaseReference = database.getReference("precord")
-
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance()
+    private val storageRef: StorageReference = storage.reference
 
     // 회원 정보
     data class User(
@@ -126,6 +129,7 @@ class FirebaseManager {
             parcel.writeString(photo)
             parcel.writeString(memo)
         }
+
         override fun describeContents(): Int = 0
 
         companion object CREATOR : Parcelable.Creator<precord> {
@@ -133,7 +137,6 @@ class FirebaseManager {
             override fun newArray(size: Int): Array<precord?> = arrayOfNulls(size)
         }
     }
-
 
     // 사용자 추가
     fun addUser(user: User, callback: (Boolean) -> Unit) {
@@ -217,6 +220,34 @@ class FirebaseManager {
             }
     }
 
+    // 업데이트 메서드 (기록 수정 기능)
+    fun updatePrecord(precord: precord, callback: (Boolean) -> Unit) {
+        precordRef.child(precord.id).setValue(precord)
+            .addOnCompleteListener { task ->
+                callback(task.isSuccessful)
+            }
+    }
+
+    // 업데이트 메서드 (기록 수정 기능)
+    fun updateGrecord(grecord: grecord, callback: (Boolean) -> Unit) {
+        grecordRef.child(grecord.id).setValue(grecord)
+            .addOnCompleteListener { task ->
+                callback(task.isSuccessful)
+            }
+    }
+
+    fun uploadPhoto(uri: Uri, callback: (String?) -> Unit) {
+        val photoRef = storageRef.child("photos/${uri.lastPathSegment}")
+        photoRef.putFile(uri)
+            .addOnSuccessListener { taskSnapshot ->
+                photoRef.downloadUrl.addOnSuccessListener { uri ->
+                    callback(uri.toString())
+                }
+            }
+            .addOnFailureListener {
+                callback(null)
+            }
+    }
 
     // 사용자 인증
     fun isUserValid(username: String, password: String, callback: (Boolean) -> Unit) {
@@ -516,7 +547,7 @@ class FirebaseManager {
     // 특정 날짜의 기록 정보 조회
     fun getActivitiesByDate(date: String, callback: (List<Any>) -> Unit) {
         val activities = mutableListOf<Any>()
-        val dateInt = date.toIntOrNull() ?: return callback(emptyList()) // date를 Int로 변환
+        val dateInt = date.replace("-", "").toIntOrNull() ?: return callback(emptyList())
 
         precordRef.orderByChild("date").equalTo(dateInt.toDouble())
             .addListenerForSingleValueEvent(object : ValueEventListener {
@@ -550,9 +581,14 @@ class FirebaseManager {
 
     // 기록 정보 삭제
     fun deleteActivity(id: String, callback: (Boolean) -> Unit) {
-        val activityRef = database.getReference("activities").child(id)
-        activityRef.removeValue().addOnCompleteListener { task ->
-            callback(task.isSuccessful)
+        precordRef.child(id).removeValue().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                grecordRef.child(id).removeValue().addOnCompleteListener { task2 ->
+                    callback(task2.isSuccessful)
+                }
+            } else {
+                callback(false)
+            }
         }
     }
 

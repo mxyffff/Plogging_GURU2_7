@@ -1,18 +1,27 @@
 package com.example.plogging_guru2_7
 
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.bumptech.glide.Glide
 import com.example.plogging_guru2_7.databinding.ActivityAddPersonalBinding
 
 class AddPersonalActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddPersonalBinding
     private lateinit var firebaseManager: FirebaseManager
+    private var precord: FirebaseManager.precord? = null
+    private var selectedPhotoUri: Uri? = null
+
+    companion object {
+        private const val REQUEST_CODE_SELECT_PHOTO = 1
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,62 +39,107 @@ class AddPersonalActivity : AppCompatActivity() {
 
         // FirebaseManager 초기화
         firebaseManager = FirebaseManager()
+        precord = intent.getParcelableExtra("activity")
 
-        // 'back' 버튼 클릭시
+        precord?.let {
+            binding.etTitle.setText(it.personalName)
+            binding.etpDate.setText(it.date.toString())
+            binding.etpLocation.setText(it.personalPlace)
+            binding.etMemo.setText(it.memo)
+            if (it.photo.isNotEmpty()) {
+                Glide.with(this).load(it.photo).into(binding.ivPhoto)
+            }
+        }
+
+        binding.btnSave.setOnClickListener {
+            savePersonalRecord()
+        }
+
+        binding.ivPhoto.setOnClickListener {
+            selectPhoto()
+        }
+
         binding.btnBack.setOnClickListener {
-            val intent = Intent(this, CalendarActivity::class.java)
-            startActivity(intent)
             finish()
         }
 
-        // EditText에 기존 데이터 표시
-        intent.getParcelableExtra<FirebaseManager.precord>("activity")?.let { precord ->
-            binding.etTitle.setText(precord.personalName)
-            binding.etpDate.setText(precord.date.toString())
-            binding.etpLocation.setText(precord.personalPlace)
-            binding.etMemo.setText(precord.memo)
-            // 사진 처리는 필요에 따라 추가
-        }
 
         // Handle saving data to Firebase
         binding.btnSave.setOnClickListener {
-            savePersonalToDatabase()
-            // Save data to Firebase
+            savePersonalRecord()
         }
     }
 
-    // add group record
-    private fun savePersonalToDatabase() {
+    private fun selectPhoto() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, REQUEST_CODE_SELECT_PHOTO)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_SELECT_PHOTO && resultCode == Activity.RESULT_OK) {
+            selectedPhotoUri = data?.data
+            binding.ivPhoto.setImageURI(selectedPhotoUri)
+        }
+    }
+
+    private fun savePersonalRecord() {
         val personalName = binding.etTitle.text.toString()
-        val date = binding.etpDate.text.toString().toIntOrNull() ?: 0
         val personalPlace = binding.etpLocation.text.toString()
-        val photo = arrayOf(binding.ivPhoto).toString()
         val memo = binding.etMemo.text.toString()
+        val date = binding.etpDate.text.toString().toIntOrNull() ?: 0
 
-
-        if (personalName.isNotEmpty() && date > 0 && personalPlace.isNotEmpty() && photo.isNotEmpty() && memo.isNotEmpty()) {
-
-            val precord = FirebaseManager.precord(
+        val saveRecord: (String) -> Unit = { photoUrl ->
+            val updatedPrecord = precord?.copy(
                 personalName = personalName,
-                date = date,
                 personalPlace = personalPlace,
-                photo = photo,
-                memo = memo
+                memo = memo,
+                photo = photoUrl,
+                date = date
+            ) ?: FirebaseManager.precord(
+                personalName = personalName,
+                personalPlace = personalPlace,
+                memo = memo,
+                photo = photoUrl,
+                date = date
             )
 
-            firebaseManager.addPrecord(precord) { success ->
-                if (success) {
-                    Toast.makeText(this, "기록이 성공적으로 저장되었습니다.", Toast.LENGTH_SHORT).show()
-                    // move to CalendarActivity
-                    val intent = Intent(this, CalendarActivity::class.java)
-                    startActivity(intent)
-                    finish()
+            if (precord != null) {
+                // 기존 기록 업데이트
+                firebaseManager.updatePrecord(updatedPrecord) { success ->
+                    if (success) {
+                        // 업데이트된 기록을 반환
+                        setResult(Activity.RESULT_OK, Intent().putExtra("updatedActivity", updatedPrecord))
+                        finish()
+                    } else {
+                        Toast.makeText(this, "기록 업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            } else {
+                // 새로운 기록 추가
+                firebaseManager.addPrecord(updatedPrecord) { success ->
+                    if (success) {
+                        // 추가된 기록을 반환
+                        setResult(Activity.RESULT_OK, Intent().putExtra("updatedActivity", updatedPrecord))
+                        finish()
+                    } else {
+                        Toast.makeText(this, "기록 추가에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        if (selectedPhotoUri != null) {
+            firebaseManager.uploadPhoto(selectedPhotoUri!!) { photoUrl ->
+                if (photoUrl != null) {
+                    saveRecord(photoUrl)
                 } else {
-                    Toast.makeText(this, "기록 저장에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "사진 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
         } else {
-            Toast.makeText(this, "모든 정보를 입력해 주세요.", Toast.LENGTH_SHORT).show()
+            saveRecord(precord?.photo ?: "")
         }
     }
 }
