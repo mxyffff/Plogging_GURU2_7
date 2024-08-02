@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.plogging_guru2_7.databinding.CalendarItemBinding
 
 class ActivityAdapter(
-    private var activities: List<Any>,
+    var activities: List<Any>,  // 여기를 var로 수정
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<ActivityAdapter.ActivityViewHolder>() {
 
