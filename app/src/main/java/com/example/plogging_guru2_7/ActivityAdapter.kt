@@ -50,10 +50,12 @@ class ActivityAdapter(
             is FirebaseManager.grecord -> {
                 holder.binding.tvTitle.text = activity.groupName
                 holder.binding.ivIcon.setImageResource(R.drawable.group)
+                holder.binding.ivdelete.setImageResource(R.drawable.trashcan)
             }
             is FirebaseManager.precord -> {
                 holder.binding.tvTitle.text = activity.personalName
                 holder.binding.ivIcon.setImageResource(R.drawable.personal)
+                holder.binding.ivdelete.setImageResource(R.drawable.trashcan)
             }
         }
     }
