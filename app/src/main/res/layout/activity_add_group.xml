@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:hint="모임의 이름을 적어주세요"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -81,7 +81,7 @@
             android:layout_marginTop="2dp"
             android:hint="YYYY MM DD"
             android:inputType="number"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -99,7 +99,7 @@
             android:layout_marginTop="2dp"
             android:hint="HH MM"
             android:inputType="number"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -116,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:hint="모임을 진행한 장소를 적어주세요"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -133,7 +133,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:hint="필요한 물품을 적어주세요"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -150,7 +150,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:hint="기록하고 싶은 내용을 적어주세요"
-            android:textSize="15sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <Button
@@ -158,7 +158,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="12dp"
             android:backgroundTint="@color/MintGreen"
             android:text="저장" />
     </LinearLayout>
