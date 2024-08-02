@@ -1,5 +1,6 @@
 package com.example.plogging_guru2_7
 
+import android.animation.ObjectAnimator
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -19,6 +20,7 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
     private lateinit var firebaseManager: FirebaseManager
     private lateinit var activityAdapter: ActivityAdapter
     private var selectedDate: String = ""
+    private var isFocusable = false
 
     companion object {
         private const val REQUEST_CODE_EDIT_ACTIVITY = 2
@@ -38,12 +40,6 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
         binding = ActivityCalendarBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //버튼 초기화
-        val myPageIcon: Button = findViewById(R.id.myPageIcon)
-        val calendarIcon: Button = findViewById(R.id.calendarIcon)
-        val communityIcon: Button = findViewById(R.id.communityIcon)
-        val mapIcon: Button = findViewById(R.id.mapIcon)
-
         // FirebaseManager 초기화
         firebaseManager = FirebaseManager()
 
@@ -53,7 +49,26 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
         // Floating button setup
         binding.fab.setOnClickListener {
             // Show the floating menu
-            showFloatingMenu()
+            if(isFocusable) {
+                ObjectAnimator.ofFloat(binding.fabAddGroup, "translationY", 0f).apply { start() }
+                ObjectAnimator.ofFloat(binding.fabAddPersonal, "translationY", 0f).apply { start() }
+            }
+            else {
+                ObjectAnimator.ofFloat(binding.fabAddGroup, "translationY", -200f).apply { start() }
+                ObjectAnimator.ofFloat(binding.fabAddPersonal, "translationY", -400f).apply { start() }
+            }
+
+            isFocusable = !isFocusable
+        }
+
+        // 개인 플로깅 버튼 클릭 시
+        binding.fabAddPersonal.setOnClickListener {
+            startActivity(Intent(this, AddPersonalActivity::class.java))
+        }
+
+        // 그룹 플로깅 버튼 클릭 시
+        binding.fabAddGroup.setOnClickListener {
+            startActivity(Intent(this, AddGroupActivity::class.java))
         }
 
         /// RecyclerView setup for listing activities
@@ -61,22 +76,24 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
         activityAdapter = ActivityAdapter(emptyList(), this)
         binding.recyclerView.adapter = activityAdapter
 
+
+        // 하단바
         //각 버튼에 클릭 리스너 설정 (각 페이지로 이동)
-        mapIcon.setOnClickListener {
+        binding.mapIcon.setOnClickListener {
             val intent = Intent(this, PloggingSpotActivity::class.java)
             startActivity(intent)
         }
 
-        calendarIcon.setOnClickListener {
+        binding.calendarIcon.setOnClickListener {
             //현재 페이지 유지
         }
 
-        communityIcon.setOnClickListener {
+        binding.communityIcon.setOnClickListener {
             val intent = Intent(this, CommunityActivity::class.java)
             startActivity(intent)
         }
 
-        myPageIcon.setOnClickListener {
+        binding.myPageIcon.setOnClickListener {
             val intent = Intent(this, MyPageActivity::class.java)
             startActivity(intent)
         }
@@ -96,39 +113,6 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
         }
     }
 
-    private fun showFloatingMenu() {
-        val view = layoutInflater.inflate(R.layout.fab_menu, null)
-        val personalFab = view.findViewById<FloatingActionButton>(R.id.fab_add_personal)
-        val groupFab = view.findViewById<FloatingActionButton>(R.id.fab_add_group)
-
-        val popupWindow = android.widget.PopupWindow(view,
-            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT,
-            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT)
-        popupWindow.isFocusable = true
-        popupWindow.update()
-
-        // 개인 플로깅 버튼 클릭 시
-        personalFab.setOnClickListener {
-            startActivity(Intent(this, AddPersonalActivity::class.java))
-            popupWindow.dismiss()
-        }
-
-        // 그룹 플로깅 버튼 클릭 시
-        groupFab.setOnClickListener {
-            startActivity(Intent(this, AddGroupActivity::class.java))
-            popupWindow.dismiss()
-        }
-
-        // 팝업 창 표시 위치를 fab 바로 위로 설정
-        binding.fab.post {
-            val location = IntArray(2)
-            binding.fab.getLocationOnScreen(location)
-            val x = location[0] + (binding.fab.width / 2) - (view.measuredWidth / 2)
-            val y = location[1] - view.measuredHeight - binding.fab.height / 2
-
-            popupWindow.showAtLocation(binding.fab, android.view.Gravity.NO_GRAVITY, x, y)
-        }
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

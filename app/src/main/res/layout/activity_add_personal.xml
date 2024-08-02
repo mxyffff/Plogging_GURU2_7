@@ -114,12 +114,11 @@
             <ImageView
                 android:id="@+id/ivPhoto"
                 android:layout_width="250dp"
-                android:layout_height="150dp"
+                android:layout_height="160dp"
                 android:layout_gravity="center"
                 android:layout_margin="5dp"
                 android:padding="0dp"
-                android:background="@drawable/border"
-                android:src="@drawable/trash" />
+                android:src="@drawable/ex_img"/>
 
             <TextView
                 android:layout_width="wrap_content"
