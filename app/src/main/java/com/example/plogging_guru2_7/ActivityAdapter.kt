@@ -13,7 +13,6 @@ class ActivityAdapter(
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<ActivityAdapter.ActivityViewHolder>() {
 
-
     interface OnItemClickListener {
         fun onItemClick(activity: Any)
         fun onDeleteClick(activity: Any)
