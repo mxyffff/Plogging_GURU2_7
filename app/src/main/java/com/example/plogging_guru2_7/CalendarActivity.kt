@@ -51,17 +51,14 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
         activityAdapter = ActivityAdapter(emptyList(), this)
         binding.recyclerView.adapter = activityAdapter
 
-        // Load activities from Firebase and update RecyclerView
-//        loadActivitiesFromFirebase()
 
     }
 
     private fun setupCalendar() {
         val calendarView = findViewById<CalendarView>(R.id.calendarView)
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
-            // 날짜가 선택되었을 때 처리할 코드를 여기에 작성
-            val selectedDate = "$year-${month + 1}-$dayOfMonth"
-            // 선택된 날짜에 따라 데이터를 필터링하거나 로드
+            selectedDate = "$year${String.format("%02d", month + 1)}${String.format("%02d", dayOfMonth)}"
+            loadActivitiesForDate(selectedDate)
         }
     }
 
@@ -98,13 +95,6 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
         popupWindow.showAsDropDown(binding.fab, 0, -binding.fab.height - view.measuredHeight)
     }
 
-//    private fun loadActivitiesFromFirebase() {
-//        firebaseManager.getAllActivities { activities ->
-//            activityAdapter = ActivityAdapter(activities, this)
-//            binding.recyclerView.adapter = activityAdapter
-//        }
-//    }
-
     override fun onItemClick(activity: Any) {
         val intent = when (activity) {
             is FirebaseManager.grecord -> Intent(this, AddGroupActivity::class.java).apply {
@@ -127,7 +117,7 @@ class CalendarActivity : AppCompatActivity(), ActivityAdapter.OnItemClickListene
         firebaseManager.deleteActivity(id) { success ->
             if (success) {
                 Toast.makeText(this, "기록이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
-                loadActivitiesFromFirebase()
+                loadActivitiesForDate(selectedDate)  // 삭제 후 해당 날짜의 데이터를 다시 로드
             } else {
                 Toast.makeText(this, "기록 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }

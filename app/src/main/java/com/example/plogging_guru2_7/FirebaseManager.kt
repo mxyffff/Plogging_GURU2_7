@@ -126,7 +126,6 @@ class FirebaseManager {
             parcel.writeString(photo)
             parcel.writeString(memo)
         }
-
         override fun describeContents(): Int = 0
 
         companion object CREATOR : Parcelable.Creator<precord> {
@@ -134,6 +133,7 @@ class FirebaseManager {
             override fun newArray(size: Int): Array<precord?> = arrayOfNulls(size)
         }
     }
+
 
     // 사용자 추가
     fun addUser(user: User, callback: (Boolean) -> Unit) {
