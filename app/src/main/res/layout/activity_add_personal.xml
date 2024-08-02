@@ -31,7 +31,7 @@
                     android:layout_marginLeft="16dp"
                     android:text="◀"
                     android:textColor="@color/DarkMintGreen"
-                    android:textSize="25sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="나의 플로깅 기록"
-                    android:textSize="28sp"
+                    android:textSize="24sp"
                     android:textStyle="bold" />
             </FrameLayout>
 

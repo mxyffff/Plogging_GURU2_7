@@ -22,7 +22,7 @@
             android:text="◀"
             android:textColor="@color/DarkMintGreen"
             android:textStyle="bold"
-            android:textSize="25sp" />
+            android:textSize="22sp" />
 
         <TextView
             android:layout_gravity="center"
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:text="내가 가입한 모임"
             android:textStyle="bold"
-            android:textSize="26sp" />
+            android:textSize="24sp" />
     </FrameLayout>
 
     <ScrollView

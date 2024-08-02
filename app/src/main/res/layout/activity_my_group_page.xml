@@ -27,7 +27,7 @@
                 android:layout_marginLeft="16dp"
                 android:text="◀"
                 android:textColor="@color/DarkMintGreen"
-                android:textSize="25sp"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="GroupName"
-                android:textSize="28sp"
+                android:textSize="25sp"
                 android:textStyle="bold" />
         </FrameLayout>
 
