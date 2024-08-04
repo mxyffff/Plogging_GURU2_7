@@ -33,100 +33,106 @@
             android:textSize="26sp" />
     </FrameLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_vertical"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp" >
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/futura"
-            android:text="Username"
-            android:textSize="16sp" />
-        <EditText
-            android:id="@+id/username"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/DarkMintGreen"
-            android:hint="아이디"
-            android:textSize="16sp" />
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp" >
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Password"
-            android:textSize="16sp"
-            android:fontFamily="@font/futura" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/futura"
+                android:text="Username"
+                android:textSize="16sp" />
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/DarkMintGreen"
+                android:hint="아이디"
+                android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/DarkMintGreen"
-            android:hint="비밀번호(8자 이상, 영문과 숫자 조합)"
-            android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Password"
+                android:textSize="16sp"
+                android:fontFamily="@font/futura" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Confirm Password"
-            android:textSize="16sp"
-            android:fontFamily="@font/futura" />
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/DarkMintGreen"
+                android:hint="비밀번호(8자 이상, 영문과 숫자 조합)"
+                android:textSize="16sp" />
 
-        <EditText
-            android:id="@+id/rePassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/DarkMintGreen"
-            android:hint="비밀번호 확인"
-            android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Confirm Password"
+                android:textSize="16sp"
+                android:fontFamily="@font/futura" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Email"
-            android:textSize="16sp"
-            android:fontFamily="@font/futura" />
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/DarkMintGreen"
-            android:fontFamily="@font/futura"
-            android:hint="user@mail.com"
-            android:textSize="16sp" />
+            <EditText
+                android:id="@+id/rePassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/DarkMintGreen"
+                android:hint="비밀번호 확인"
+                android:textSize="16sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Nickname"
-            android:textSize="16sp"
-            android:fontFamily="@font/futura" />
-        <EditText
-            android:id="@+id/nickname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/DarkMintGreen"
-            android:hint="닉네임"
-            android:textSize="16sp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Email"
+                android:textSize="16sp"
+                android:fontFamily="@font/futura" />
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/DarkMintGreen"
+                android:fontFamily="@font/futura"
+                android:hint="user@mail.com"
+                android:textSize="16sp" />
 
-        <Button
-            android:id="@+id/btnSignup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/button_style"
-            android:fontFamily="@font/futura_bold"
-            android:text="Sign Up"
-            android:textSize="16sp" />
-    </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Nickname"
+                android:textSize="16sp"
+                android:fontFamily="@font/futura" />
+            <EditText
+                android:id="@+id/nickname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/DarkMintGreen"
+                android:hint="닉네임"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/btnSignup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button_style"
+                android:fontFamily="@font/futura_bold"
+                android:text="Sign Up"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>
