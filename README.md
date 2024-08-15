@@ -1,6 +1,9 @@
 # WeGlean
 <img src="https://github.com/user-attachments/assets/61ca5f6b-93da-4a0f-bfa1-ce6684ccaf69" alt="app_icon" width="200"> 
 
+- **서울여대 GURU2 Android 해커톤** 참가 프로젝트
+- 우수상 수상
+
 ## 프로젝트 소개
 'WeGlean(위글린)'은 플로깅 활동을 지원하고, 환경 보호에 기여하고자 하는 사용자들을 위한 모바일 앱 입니다. 이 앱은 사용자가 일상적인 산책 중에 쓰레기를 줍는 활동을 기록합니다. 프로젝트의 목표는 환경 보호 활동을 일상의 즐거운 일부로 만들어 사용자들이 자발적으로 참여하도록 동기를 부여하는 것입니다. 
 
