@@ -1,4 +1,4 @@
-## WeGlean
+# WeGlean
 <img src="https://github.com/user-attachments/assets/61ca5f6b-93da-4a0f-bfa1-ce6684ccaf69" alt="app_icon" width="200"> 
 
 ## 프로젝트 소개
