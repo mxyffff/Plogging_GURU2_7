@@ -4,6 +4,9 @@
 - **서울여대 GURU2 Android 해커톤** 참가 프로젝트
 - 우수상 수상
 
+## Youtube: 해커톤 시연 영상
+<https://youtu.be/o_tQvDHHXKQ?si=wS4czpJgUymiIaLx>
+
 ## Notion: 자세한 개발 과정을 볼 수 있는 페이지입니다. (기획서, 기능명세서, 개발일지 첨부)
 <https://darkened-ozraraptor-48a.notion.site/2-Android-WeGlean-26bb17570c944f8a938a3355803aaf97?pvs=4>
 
