@@ -5,10 +5,14 @@
 - 우수상 수상
 
 ## Youtube: 해커톤 시연 영상
-<https://youtu.be/o_tQvDHHXKQ?si=wS4czpJgUymiIaLx>
+<p align="left">
+  <a href="https://youtu.be/o_tQvDHHXKQ?si=wS4czpJgUymiIaLx" target="blank"><img align="center" src="https://img.shields.io/badge/youtube-FF0000?style=for-the-badge&logo=youtube&logoColor=white"/> 
+  </a> </p>
 
 ## Notion: 자세한 개발 과정을 볼 수 있는 페이지입니다. (기획서, 기능명세서, 개발일지 첨부)
-<https://darkened-ozraraptor-48a.notion.site/2-Android-WeGlean-26bb17570c944f8a938a3355803aaf97?pvs=4>
+<p align="left">
+  <a href="https://darkened-ozraraptor-48a.notion.site/2-Android-WeGlean-26bb17570c944f8a938a3355803aaf97?pvs=4" target="blank"><img align="center" src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white"/> 
+  </a> </p>
 
 ## 프로젝트 소개
 'WeGlean(위글린)'은 플로깅 활동을 지원하고, 환경 보호에 기여하고자 하는 사용자들을 위한 모바일 앱 입니다. 사용자는 이 앱을 통해 조깅 중 쓰레기 줍기 활동을 기록할 수 있습니다. 프로젝트의 목표는 환경 보호 활동을 일상의 즐거운 일부로 만들어 사용자들이 자발적으로 참여하도록 동기를 부여하는 것입니다. 
