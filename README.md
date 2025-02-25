@@ -26,7 +26,7 @@
 또한, 지도 화면을 통해 사용자는 효과적으로 쓰레기 집중 분포 구역을 확인할 수 있으며 커뮤니티 기능을 통해 여러 플랫폼에 분포되어 있는 플로깅 공고 글을 한번에 확인하고 직접 사람들을 모집할 수 있습니다.
 
   ## 기술 스택
-  ### Environment & Development
+  ### IDE & Language
   ![Android Studio](https://img.shields.io/badge/Android%20Studio-3DDC84?style=for-the-badge&logo=AndroidStudio&logoColor=white)
   ![Kotlin](https://img.shields.io/badge/kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
   ### DB
