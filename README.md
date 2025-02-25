@@ -33,9 +33,6 @@
   ![Firebase](https://img.shields.io/badge/firebase-DD2C00?style=for-the-badge&logo=firebase&logoColor=white)
   ### API - Naver Map
   ![Naver Map](https://img.shields.io/badge/naver-03C75A?style=for-the-badge&logo=naver&logoColor=white)
-  ### Communication
-  ![Notion](https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white)
-  ![Discord](https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)
 
   ## 주요 기능
   **1. 로그인 및 회원가입**
