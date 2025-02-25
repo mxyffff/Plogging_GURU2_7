@@ -9,7 +9,7 @@
   <a href="https://youtu.be/o_tQvDHHXKQ?si=wS4czpJgUymiIaLx" target="blank"><img align="center" src="https://img.shields.io/badge/youtube-FF0000?style=for-the-badge&logo=youtube&logoColor=white"/> 
   </a> </p>
 
-## Notion: 자세한 개발 과정을 볼 수 있는 페이지입니다. (기획서, 기능명세서, 개발일지 첨부)
+## Notion: 자세한 개발 과정을 볼 수 있는 페이지입니다. (기획서, 기능명세서, 개발일지 有)
 <p align="left">
   <a href="https://darkened-ozraraptor-48a.notion.site/2-Android-WeGlean-26bb17570c944f8a938a3355803aaf97?pvs=4" target="blank"><img align="center" src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white"/> 
   </a> </p>
